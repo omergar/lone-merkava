@@ -245,9 +245,9 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
     <div class="eyebrow">CREW BRIEFING</div>
     <h2>HOW TO PLAY</h2>
     <dl class="keys" id="keys"></dl>
-    <p>You command and lay the gun roughly. When it points near a target the gunner sight opens. Centre the cross with fine aim and fire. Range and elevation are automatic. A hit that does not kill halts the target for a few seconds. Rounds scatter more with distance: a sure hit at 300 m, about one in two at 2000 m.</p>
+    <p>You command and lay the gun roughly. When it points near a target the gunner sight opens. Centre the cross with fine aim and fire. Range and elevation are automatic. A hit that does not kill halts the target for a few seconds. Your armor repairs itself once you have gone 10 seconds without being hit and are not firing, so pull back out of sight when it runs low. Rounds scatter more with distance: a sure hit at 300 m, about one in two at 2000 m.</p>
     <p>The ditch can be crossed only on a laid bridge or at the two ground passes, shown green on the map. Kill bridge layers and the columns must detour to a pass. Units that reach the base damage it.</p>
-    <p>Firing ramps (sand squares on the map) lift you above the ground for long shots, but you are exposed on top. Stay spotted in one place and artillery finds you, so shoot and move. Infantry and commandos carry RPGs. Flooring the engine makes smoke that reveals you.</p>
+    <p>Firing ramps (sand squares on the map) lift you above the ground for long shots, but you are exposed on top. Stay spotted in one place and artillery finds you, so shoot and move. Infantry and commandos carry RPGs but can only use them inside about 140 m. Flooring the engine makes smoke that reveals you.</p>
     <p>Attack missions: the SAM launchers can only be hit from close range. On the Golan they sit inside a round fort you enter through the rear gate. In Lebanon they sit among village buildings that stop your rounds. Enemy units are marked only once you have seen them.</p>
     <div class="btns"><button class="b p" id="bBack2">BACK</button></div>
   </div>
@@ -502,26 +502,37 @@ function runGear(h,W,TR,s,x,L,wn,wr,whc,yE,gap){const z2=L/2-1.05,zE=L/2-.38,rE=
   TR.push(P(trackGeo(s*x,.58,z2,zE,yE,rE+.035),0xffffff));
   for(const e of[1,-1]){h.push(P(cylX(rE,.5,16),DK,s*x,yE,e*zE));W.push(P(disc(rE-.02),whc,s*(x+.26),yE,e*zE,0,s*Math.PI/2,0));}
   for(let i=0;i<wn;i++){const z=-z2+i*2*z2/(wn-1)+(gap&&i===0?-.12:0);h.push(P(cylX(wr,.22,22),RUB,s*(x+.03),wr+.03,z));W.push(P(disc(wr),whc,s*(x+.145),wr+.03,z,0,s*Math.PI/2,0));}}
+function loft(bot,top,cy){const pos=[],n=bot.length,tri=(a,b,c)=>{const ux=b[0]-a[0],uy=b[1]-a[1],uz=b[2]-a[2],vx=c[0]-a[0],vy=c[1]-a[1],vz=c[2]-a[2],nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;
+    if(nx*(a[0]+b[0]+c[0])/3+ny*((a[1]+b[1]+c[1])/3-cy)+nz*(a[2]+b[2]+c[2])/3<0)pos.push(...a,...c,...b);else pos.push(...a,...b,...c);};
+  for(let i=0;i<n;i++){const j=(i+1)%n;tri(bot[i],bot[j],top[j]);tri(bot[i],top[j],top[i]);}
+  for(let i=1;i<n-1;i++){tri(top[0],top[i],top[i+1]);tri(bot[0],bot[i],bot[i+1]);}
+  const g=new T.BufferGeometry(),uv=new Float32Array(pos.length/3*2);for(let i=0;i<uv.length/2;i++){uv[i*2]=i%3===1?.9:.1;uv[i*2+1]=i%3===2?.9:.1;}
+  g.setAttribute('position',new T.BufferAttribute(new Float32Array(pos),3));g.setAttribute('uv',new T.BufferAttribute(uv,2));g.computeVertexNormals();return g;}
 const ell=(a,b,c)=>{const g=new T.SphereGeometry(1,18,12);g.scale(a,b,c);return g;};
 function buildMerkava(){const c=0x76745f,c2=0x696752,c3=0x82806a,wh=0x55544a,w=0xe9e6d8,h=[],t=[],g=[],W=[],TR=[];
   for(const s of[1,-1]){runGear(h,W,TR,s,1.55,7.3,6,.4,wh,.66);
     for(let i=0;i<6;i++)h.push(P(box(.07,.66,1.13),i%2?c2:c,s*1.9,1.0,-2.97+i*1.19),P(box(.09,.05,1.13),c3,s*1.9,1.34,-2.97+i*1.19));
     h.push(P(box(.78,.06,7.35),c2,s*1.53,1.36,0),P(box(.95,.5,.5),c2,s*1.25,1.3,-3.9),P(box(.9,.04,.46),DK,s*1.25,1.56,-3.9),
       P(box(.3,.22,.2),c2,s*1.25,1.56,3.42),P(cylZ(.09,.06,12),0xe0dcc0,s*1.25,1.56,3.54),P(box(.12,.22,.22),DK,s*.9,.9,3.6),
-      P(box(.02,.5,.07),w,s*1.94,1,-1.62,.5),P(box(.02,.5,.07),w,s*1.94,1,-1.38,-.5));
-    t.push(P(cylY(.06,.25,8),DK,s*1.1,.75,-1.35),P(ell(.44,.4,1.8),c,s*1.0,.42,.4,0,-s*.197,0),P(ell(.5,.39,.62),c,s*.98,.4,-1.3),P(ell(.3,.3,.42),c3,s*.62,.5,2.25),P(box(.3,.26,.36),c2,s*.98,.62,1.75),
-      P(cylZ(.045,.3,8),DK,s*.92,.68,1.95),P(cylZ(.045,.3,8),DK,s*1.04,.68,1.95));}
+      P(box(.02,.66,.1),w,s*1.945,1,.34,-.47),P(box(.02,.66,.1),w,s*1.945,1,.66,.47));
+    t.push(P(cylY(.06,.2,8),DK,s*1.1,.86,-1.35),P(box(.3,.24,.4),c2,s*.93,.5,1.55,0,-s*.36,0),P(cylZ(.045,.3,8),DK,s*.84,.56,1.8,0,-s*.36,0),P(cylZ(.045,.3,8),DK,s*.98,.56,1.76,0,-s*.36,0),
+      P(box(.06,.4,2.4),c3,s*1.3,.4,-.75,0,-s*.03,s*.33),P(box(.05,.05,1.2),DK,s*1.3,.66,-2.5),P(box(.05,.05,1.2),DK,s*1.3,.36,-2.5),P(box(.05,.56,.05),DK,s*1.3,.38,-3.07),P(box(.05,.56,.05),DK,s*1.3,.38,-2.45));
+    for(let i=0;i<5;i++)t.push(P(box(.015,.26,.015),DK,s*1.3,-.02,-2.05-i*.24),P(new T.SphereGeometry(.05,6,5),DK,s*1.3,-.18,-2.05-i*.24));}
   h.push(P(box(2.55,.8,7),c2,0,.8,0),P(box(3.7,.56,4.4),c,0,1.4,-1.45),P(wedge(3.7,.56,3,1,.28),c,0,1.4,2.15),P(box(3.5,.5,.5),c2,0,.9,3.35,.5),
     P(wedge(1.5,.2,2.3,1,.35),c3,-.95,1.74,1.25),P(cylY(.36,.08,18),c2,.95,1.62,1.3),P(box(.3,.1,.12),DK,.95,1.7,1.72),
     P(box(1.2,.75,.12),DK,0,1,-3.68),P(box(.5,.3,.3),c2,0,1.5,-3.8),P(box(.12,.36,1.4),DK,-1.9,1.5,1.5));
   for(let i=0;i<6;i++)h.push(P(box(.14,.03,1.3),c2,-1.93,1.36+i*.055,1.5),P(box(1.2,.03,.08),DK,-.95,1.82-i*.012,.5+i*.3));
-  t.push(P(wedge(2.9,.8,4.2,.42,.5),c,0,.4,.5),P(box(2.5,.06,1.1),DK,0,.08,-2.1),P(box(2.5,.4,.05),DK,0,.3,-2.63),P(box(.05,.4,1.1),DK,1.23,.3,-2.1),P(box(.05,.4,1.1),DK,-1.23,.3,-2.1),P(box(2.3,.3,.8),c2,0,.28,-2.05),
+  {const R=[[.42,3.0],[1.05,1.4],[1.42,-.3],[1.38,-1.9]],Tp=[[.3,.5,2.85],[.8,.72,1.3],[1.1,.8,-.3],[1.1,.8,-1.8]];
+    const bot=R.map(q=>[q[0],.04,q[1]]).concat(R.slice().reverse().map(q=>[-q[0],.04,q[1]])),top=Tp.map(q=>[q[0],q[1],q[2]]).concat(Tp.slice().reverse().map(q=>[-q[0],q[1],q[2]]));
+    t.push(P(loft(bot,top,.4),c));}
+  t.push(P(box(1.9,.08,1.9),c2,0,.83,-.85),P(box(2.6,.05,1.2),DK,0,.1,-2.5),P(box(2.65,.05,.05),DK,0,.66,-3.07),P(box(2.65,.05,.05),DK,0,.36,-3.07),P(box(.05,.56,.05),DK,0,.38,-3.07),
+    P(ell(.55,.3,.42),0x7f8c5c,-.55,.42,-2.5),P(box(.9,.4,.7),c2,.55,.34,-2.5),P(ell(.34,.2,.3),0x6a6a52,.5,.66,-2.6),
     P(cylY(.4,.2,20),c2,-.55,.9,-.55),P(cylY(.33,.06,20),c3,-.55,1.03,-.55),P(box(.07,.09,1),DK,-.55,1.2,-.15),P(box(.14,.16,.3),DK,-.55,1.14,-.55),
-    P(cylY(.3,.07,18),c3,.55,.83,-.6),P(box(.07,.09,.95),DK,.6,1.05,-.2),P(box(.34,.26,.4),DK,-.55,.86,1.05),
-    P(box(1,.56,.62),c2,0,.35,2.66),P(cylX(.33,1.08,16),c2,0,.36,2.84),P(cylX(.27,2.5,14),c2,0,.3,-1.62),P(box(.56,.04,.5),c2,-.55,1.26,-.94,-1.2),P(box(.1,.13,1.6),DK,0,.84,2.1),P(box(.22,.2,.34),DK,.16,.8,1.5),P(cylZ(.02,.7,6),DK,0,.84,3.1));
-  for(let i=0;i<13;i++)t.push(P(box(.015,.3,.015),DK,-1.14+i*.19,-.1,-2.64),P(new T.SphereGeometry(.05,6,5),DK,-1.14+i*.19,-.28,-2.64));
+    P(cylY(.3,.07,18),c3,.55,.86,-.6),P(box(.07,.09,.95),DK,.6,1.08,-.2),P(box(.1,.3,.1),DK,.6,.95,-.5),P(box(.34,.24,.4),DK,-.5,.84,.9),
+    P(box(.78,.48,.5),c2,0,.32,2.95),P(box(.56,.04,.5),c2,-.55,1.26,-.94,-1.2),P(box(.1,.13,1.6),DK,0,.78,2.3),P(box(.22,.2,.34),DK,.16,.74,1.7),P(cylZ(.02,.7,6),DK,0,.78,3.3));
+  for(let i=0;i<14;i++)t.push(P(box(.015,.26,.015),DK,-1.24+i*.19,-.02,-3.07),P(new T.SphereGeometry(.05,6,5),DK,-1.24+i*.19,-.18,-3.07));
   g.push(P(cylZ(.075,5.2,18),c2,0,0,2.6),P(cylZ(.105,3.3,18),c,0,0,1.9),P(cylZ(.15,.95,18),c2,0,0,2.95),P(cylZ(.09,.14,18),DK,0,0,5.15));
-  for(const z of[.45,1.4,2.35,3.5])g.push(P(cylZ(.118,.06,18),c2,0,0,z));
+  for(const z of[.45,1.4,2.35,3.5])g.push(P(cylZ(.118,.06,18),c2,0,0,z));g.push(P(cylZ(.08,.08,18),w,0,0,4.5),P(cylZ(.08,.08,18),w,0,0,4.78));
   return{hull:merge(h),wheels:merge(W),tracks:merge(TR),turret:merge(t),gun:merge(g),tp:[0,1.7,-.9],gp:[0,.36,2.7],mz:5.2,hw:1.95,hl:3.75,hh:2.9,ex:[-1.95,1.55,1.5]};}
 function sovHull(o,h,W,TR){const L=o.L,wh=0x4c5040;
   for(const s of[1,-1]){runGear(h,W,TR,s,1.36,L+.2,o.wn,o.wr,wh,.54,o.gap);
@@ -570,9 +581,9 @@ const GEO={SAM:buildSAM(),MERK:buildMerkava(),
   BL:buildBL(),BMP:buildBMP()};
 for(const k in GEO)GEO[k].wr=k==='BMP'||k==='SAM'?.3:k==='T72'?.36:k==='MERK'?.4:.42;
 const TYPES={MERK:{name:'MERKAVA'},SAM:{name:'SAM LAUNCHER',hp:1,speed:0,score:400},
-  T55:{name:'T55',hp:2,speed:6.5,reload:9,aim:3,spread:.0022,dmg:14,score:100,slew:.4,gun:true},
-  T62:{name:'T62',hp:3,speed:6.5,reload:8,aim:2.6,spread:.0018,dmg:18,score:160,slew:.45,gun:true},
-  T72:{name:'T72',hp:4,speed:8,reload:7,aim:2.2,spread:.0012,dmg:23,score:260,slew:.55,gun:true},
+  T55:{name:'T55',hp:2,speed:6.5,reload:13,aim:3.6,spread:.0022,dmg:14,score:100,slew:.4,gun:true},
+  T62:{name:'T62',hp:3,speed:6.5,reload:11.5,aim:3.2,spread:.0018,dmg:18,score:160,slew:.45,gun:true},
+  T72:{name:'T72',hp:4,speed:8,reload:10,aim:2.8,spread:.0012,dmg:23,score:260,slew:.55,gun:true},
   BL:{name:'BRIDGE LAYER',hp:2,speed:6,score:300,slew:0,base:10},
   BMP:{name:'BMP',hp:1,speed:8.5,score:120,slew:.6,base:22}};
 const matTank=new T.MeshPhongMaterial({vertexColors:true,map:grimeTex,shininess:14,specular:0x2a2a26}),matWreck=new T.MeshLambertMaterial({color:0x1b1916,map:grimeTex,side:T.DoubleSide});
@@ -729,7 +740,7 @@ function missionDef(sc,tutorial){const r=Math.random,tank=()=>{const q=r();retur
     {ri:r()<.5?0:1,delay:130,name:'SECOND ECHELON',units:[[tank(),'assault'],[tank(),'break'],[tank(),'break']]});
   else if(id==='LA')axes.push({ri:0,delay:45,name:'PATROL',units:[[tank(),'assault'],[tank(),'assault']]},{ri:1,delay:140,name:'PATROL',units:[[tank(),'assault'],[tank(),'assault']]});
   if(!tutorial){helis.push({t:55+r()*70});if(r()<.6)helis.push({t:170+r()*90});if(r()<.25)helis.push({t:300+r()*60});}
-  return{sc,name:sc.place[r()*sc.place.length|0],axes,helis,tutorial,pal:PALS[r()*3|0],diff:.88,diffA:.9};}
+  return{sc,name:sc.place[r()*sc.place.length|0],axes,helis,tutorial,pal:PALS[r()*3|0],diff:1.15,diffA:1};}
 function solveElev(d,dy,v){const disc=v*v*v*v-GRAV*(GRAV*d*d+2*dy*v*v);if(disc<0)return null;return Math.atan((v*v-Math.sqrt(disc))/(GRAV*d));}
 function los(ax,ay,az,bx,by,bz){const n=Math.max(8,Math.min(40,Math.hypot(bx-ax,bz-az)/45|0));for(let i=1;i<n;i++){const t=i/n,x=lerp(ax,bx,t),z=lerp(az,bz,t);if(Hg(x,z)>lerp(ay,by,t))return false;}return!(blocks.length&&segBlock(ax,ay,az,bx,by,bz));}
 const DIRS=['N','NE','E','SE','S','SW','W','NW'];
@@ -742,7 +753,7 @@ function setupMission(id,asMenu){
   buildWorld(asMenu?3:(Math.random()*1e6|0)+7,sc);M=missionDef(sc,tutorial);M.t=0;M.pending=asMenu?[]:M.axes.slice();
   M.passAx=passZ.map(z=>({z,name:'PASS',pass:true,busy:null,bls:[],bridge:{ready:true,alive:true,z,pass:true}}));M.live=asMenu?[]:M.passAx.slice();M.started=false;art.t=0;art.on=false;art.x=1e9;paintSky(asMenu?PALS[1]:M.pal);
   if(!P1)P1=makeTank('MERK');
-  P1.x=startPos.x;P1.z=startPos.z;P1.yaw=P1.tyaw=camYaw=-Math.PI/2;P1.speed=0;P1.elev=0;P1.reload=0;P1.ammo=50;P1.alive=true;P1.recoil=0;P1.reveal=0;P1.in=null;P1.onRamp=false;
+  P1.x=startPos.x;P1.z=startPos.z;P1.yaw=P1.tyaw=camYaw=-Math.PI/2;P1.speed=0;P1.elev=0;P1.reload=0;P1.ammo=50;P1.alive=true;P1.recoil=0;P1.reveal=0;P1.in=null;P1.onRamp=false;P1.hitT=99;P1.fireT=99;P1.rep=false;
   P1.hull.material=P1.tm.material=P1.gm.material=matTank;P1.wm.material=P1.wmat;P1.tk.material=P1.tmat;P1.turret.position.fromArray(P1.G.tp);P1.turret.rotation.set(0,0,0);P1.burn=P1.smoke=0;seat(P1,true);
   stats={shots:0,hits:0,kills:0,time:0,breach:0,jets:0};intel=[];M.samN=0;M.guess=samPos?{x:samPos.x+rnd(-140,140),z:samPos.z+rnd(-140,140),ph:rnd(6)}:null;P1.cmd.visible=true;tgt=null;pipOn=false;$('pip').classList.add('hide');$('fine').classList.add('hide');pipHold=0;resup=0;baseHp=100;tut=null;jetT=6;samT=16;
   $('baseRow').classList.toggle('hide',!baseOn);
@@ -773,7 +784,7 @@ function axisLost(a){let n=0;for(const e of enemies){if(!e.alive||e.axis!==a||e.
   if(a.busy&&a.busy.st!=='cross')a.busy=null;if(n)setTimeout(()=>toast('COLUMN REROUTING TO A PASS'),2000);}
 function layBridge(bl){const a=bl.axis,z=bl.z,mesh=new T.Mesh(bridgeGeo,matTank);mesh.rotation.y=Math.PI/2;scene.add(mesh);
   const b={x:XD,z,ya:Hg(XD-8.2,z),yb:Hg(XD+8.2,z),ready:false,hp:2,mesh,axis:a,alive:true,kind:'BRIDGE',name:'BRIDGE',t:0,bl};b.y=(b.ya+b.yb)/2+.3;bridges.push(b);return b;}
-function makeSquad(x,z,cmdo){const sq={vis:0,guard:false,x,z,y:Hg(x,z),kind:'INF',name:cmdo?'COMMANDO':'INFANTRY',cmdo,alive:true,speed:cmdo?3.8:3.2,yaw:Math.PI/2,men:[],rpgT:rnd(3,6),def:{dmg:16},hold:false};
+function makeSquad(x,z,cmdo){const sq={vis:0,guard:false,x,z,y:Hg(x,z),kind:'INF',name:cmdo?'COMMANDO':'INFANTRY',cmdo,alive:true,speed:cmdo?3.8:3.2,yaw:Math.PI/2,men:[],rpgT:rnd(3,6),def:{dmg:16},hold:false,hx:x,hz:z,wx:x,wz:z,wt:0};
   for(let i=0,n=cmdo?6:8;i<n;i++)sq.men.push({ox:gauss()*4,oz:gauss()*4,ph:rnd(TAU),a:true,rpg:i<(cmdo?2:1)});squads.push(sq);return sq;}
 function dismount(e){makeSquad(e.x,e.z-8,false);e.st='parked';toast('INFANTRY DISMOUNTING');}
 function spawnHeli(){let lz={x:P1.x+320,z:P1.z};for(let i=0;i<14;i++){const a=rnd(TAU),d=rnd(300,430),x=P1.x+Math.sin(a)*d,z=P1.z+Math.cos(a)*d;
@@ -802,7 +813,7 @@ function updateArtillery(dt){const p=P1;
   if(!M.started||!p.alive||state!=='play')return;
   if(Math.hypot(p.x-art.x,p.z-art.z)>28){art.x=p.x;art.z=p.z;art.t=0;art.on=false;}
   if(p.reveal>0)art.t+=dt;else art.t=Math.max(0,art.t-dt*.5);
-  if(!art.on&&art.t>23){art.on=true;art.n=0;art.next=3;toast('INCOMING ARTILLERY. MOVE');Snd.boom(.22,.6,260,true);setTimeout(()=>Snd.boom(.22,.6,260,true),350);}
+  if(!art.on&&art.t>30){art.on=true;art.n=0;art.next=3;toast('INCOMING ARTILLERY. MOVE');Snd.boom(.22,.6,260,true);setTimeout(()=>Snd.boom(.22,.6,260,true),350);}
   if(art.on){art.next-=dt;if(art.next<=0){art.n++;const r=Math.max(6,40-art.n*3.5);incoming.push({x:art.x+gauss()*r,z:art.z+gauss()*r,t:.55});art.next=rnd(1.6,2.6);Snd.fall();}}}
 
 function updateAir(dt){if(MODE!=='atk'||!samPos)return;const live=enemies.some(e=>e.type==='SAM'&&e.alive);
@@ -827,14 +838,14 @@ function spawnShell(ox,oy,oz,yaw,el,v,owner,off,tr,quiet){const ce=Math.cos(el),
 function tgtPos(t,o){if(t.kind==='BRIDGE'){o.x=XD;o.y=t.y+.4;o.z=t.z;}else if(t.kind==='INF'){o.x=t.x;o.y=t.y+1;o.z=t.z;}else if(t.kind==='HELI'){o.x=t.x;o.y=t.y+2.4;o.z=t.z;}else{o.x=t.x;o.y=t.y+(t.role==='fort'?2:1.4);o.z=t.z;}return o;}
 const _tp={x:0,y:0,z:0};
 function playerFire(){const p=P1;if(!p.alive)return;const ox=p.x,oy=p.y+2.3,oz=p.z;
-  if(tgt&&tgt.kind==='INF'&&tgt.d<1300){if(mgT>0)return;mgT=.09;const az=p.tyaw+gauss()*.0012,el=solveElev(tgt.d,tgt.y+1-oy,900)||0;
+  if(tgt&&tgt.kind==='INF'&&tgt.d<1300){if(mgT>0)return;mgT=.09;p.fireT=0;const az=p.tyaw+gauss()*.0012,el=solveElev(tgt.d,tgt.y+1-oy,900)||0;
     if((stats.mg=(stats.mg||0)+1)%2===0)spawnShell(ox,oy,oz,az,el,900,p,6,tgt.d/900);Snd.boom(.25,.08,3500,false);p.reveal=Math.max(p.reveal,8);
     for(const m of tgt.men){if(!m.a)continue;const mx=tgt.x+m.ox-ox,mz=tgt.z+m.oz-oz,md=Math.hypot(mx,mz);if(Math.abs(angDiff(Math.atan2(mx,mz),az))*md<.5&&Math.random()<.55){m.a=false;score+=15;smoke.emit(tgt.x+m.ox,tgt.y+.5,tgt.z+m.oz,0,1,0,.8,1,3,.6,.5,.4,.5,0,1);break;}}return;}
   if(p.reload>0||p.ammo<=0)return;let yaw=p.tyaw,el=p.elev,tof=0;
   if(tgt){tgtPos(tgt,_tp);const tf=tgt.d/VP,vx=tgt.speed?Math.sin(tgt.yaw)*tgt.speed:0,vz=tgt.speed?Math.cos(tgt.yaw)*tgt.speed:0,tx=_tp.x+vx*tf,tz=_tp.z+vz*tf,dx=tx-ox,dz=tz-oz,d=Math.hypot(dx,dz);
     yaw+=angDiff(Math.atan2(dx,dz),Math.atan2(_tp.x-ox,_tp.z-oz));const s=solveElev(d,_tp.y-oy,VP);if(s!==null)el=s;tof=d/VP;}
   yaw+=gauss()*SIGMA;el+=gauss()*SIGMA;
-  spawnShell(ox,oy,oz,yaw,el,VP,p,6);p.reload=RELOAD;p.ammo--;p.recoil=.7;shake=Math.max(shake,.5);stats.shots++;p.reveal=Math.max(p.reveal,14);pipHold=Math.max(pipHold,tof+1.6);Snd.boom(.9,.7,1800,true);if(p.ammo===0)resup=10;}
+  spawnShell(ox,oy,oz,yaw,el,VP,p,6);p.reload=RELOAD;p.fireT=0;p.ammo--;p.recoil=.7;shake=Math.max(shake,.5);stats.shots++;p.reveal=Math.max(p.reveal,14);pipHold=Math.max(pipHold,tof+1.6);Snd.boom(.9,.7,1800,true);if(p.ammo===0)resup=10;}
 function hitTank(t,px,py,pz,m){const dx=px-t.x,dz=pz-t.z,c=Math.cos(t.yaw),sn=Math.sin(t.yaw),lx=dx*c-dz*sn,lz=dx*sn+dz*c,ly=py-t.y;return Math.abs(lx)<t.G.hw+m&&Math.abs(lz)<t.G.hl+m&&ly>-.4&&ly<t.G.hh+m;}
 function splash(x,z,r){for(const q of squads){if(!q.alive)continue;for(const m of q.men)if(m.a&&Math.hypot(q.x+m.ox-x,q.z+m.oz-z)<r){m.a=false;score+=15;}}}
 function updateShells(dt){let ti=0;for(let i=shells.length-1;i>=0;i--){const s=shells[i],px=s.x,py=s.y,pz=s.z;if(s.rpg)smoke.emit(s.x,s.y,s.z,gauss()*.3,.5,gauss()*.3,rnd(.8,1.4),.5,2.4,.82,.82,.8,.5,-.2,.5);else s.vy-=GRAV*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.z+=s.vz*dt;s.life-=dt;
@@ -853,8 +864,8 @@ function updateShells(dt){let ti=0;for(let i=shells.length-1;i>=0;i--){const s=s
 function killEnemy(e,dist){wreck(e);explosion(e.x,e.y+1.6,e.z,1.7);Snd.boom(clamp(300/Math.max(dist,1),.25,1),1.3,1400,true);colliders.push({x:e.x,z:e.z,r:3.2});
   const pts=e.dummy?50:e.def.score+Math.round(dist*.25);score+=pts;if(!e.dummy){stats.kills++;totalKills++;}toast(e.name+' DESTROYED  +'+pts);
   if(e.axis){if(e.axis.busy===e)e.axis.busy=null;if(e.role==='bl'){for(const b of bridges)if(b.bl===e&&!b.ready&&b.alive){b.alive=false;scene.remove(b.mesh);if(e.axis.bridge===b)e.axis.bridge=null;}if(!(e.axis.bridge&&e.axis.bridge.ready)&&!e.axis.bls.some(b=>b.alive&&b.st!=='park'))axisLost(e.axis);}}}
-function damagePlayer(dmg,sx,sz,msg){const p=P1;if(!p.alive)return;p.hp-=dmg;shake=1;Snd.tone(180,.25,.25,'square');$('flash').style.opacity=1;flashT=.5;
-  const dx=sx-p.x,dz=sz-p.z,fw=dx*Math.sin(camYaw)+dz*Math.cos(camYaw),rt=-dx*Math.cos(camYaw)+dz*Math.sin(camYaw);dmgA=Math.atan2(rt,fw);dmgT=1.6;toast(msg);
+function damagePlayer(dmg,sx,sz,msg){const p=P1;if(!p.alive)return;p.hp-=dmg;p.hitT=0;shake=1;Snd.tone(180,.25,.25,'square');$('flash').style.opacity=1;flashT=.5;
+  const dx=sx-p.x,dz=sz-p.z,fw=dx*Math.sin(camYaw)+dz*Math.cos(camYaw),rt=-dx*Math.cos(camYaw)+dz*Math.sin(camYaw);dmgA=Math.atan2(rt,fw);dmgT=1.6;toast(msg);if(p.hp>0&&p.hp<60&&M.t-(M.hintT||-99)>25){M.hintT=M.t;setTimeout(()=>{if(state==='play')toast('PULL BACK. ARMOR REPAIRS WHEN NOT HIT');},2000);}
   if(p.hp<=0){p.hp=0;wreck(p);explosion(p.x,p.y+1.6,p.z,2);Snd.boom(1,1.6,1200,true);state='dying';overWhy='tank';timer=2.6;Snd.engine(0,false);}}
 function hurtPlayer(s,x,y,z,sp){const p=P1,f=-(s.vx*Math.sin(p.yaw)+s.vz*Math.cos(p.yaw))/sp,k=f>.55?.6:f<-.4?1.4:1;explosion(x,y,z,.7);dustCloud(p.x,p.y,p.z,30,34);Snd.boom(1,.6,3000,true);
   damagePlayer(s.owner.def.dmg*k,s.owner.x,s.owner.z,(s.rpg?'RPG ':'')+(k<1?'HIT ON FRONT ARMOR':k>1?'REAR HIT':'SIDE HIT'));}
@@ -899,6 +910,7 @@ function updatePlayer(dt){const p=P1,k=input.keys;
   mgT-=dt;if((input.fire||k.Space)&&(!tut||tut.step>=2))playerFire();
   p.recoil=Math.max(0,p.recoil-dt*2.2);
   if(p.reveal>0)p.reveal-=dt;
+  p.hitT+=dt;p.fireT+=dt;p.rep=p.hitT>10&&p.fireT>4&&p.hp<100;if(p.rep)p.hp=Math.min(100,p.hp+4*dt);
   if(Math.abs(p.speed)>3){p.dust-=dt;if(p.dust<=0){p.dust=.09;dust(p,1);}}
   crewAnim(p,dt);roll(p,dt);seat(p);Snd.engine(Math.abs(p.speed)/13,true);
   pipHold-=dt;const want=!!tgt||pipHold>0;if(want!==pipOn){pipOn=want;$('pip').classList.toggle('hide',!want);$('fine').classList.toggle('hide',!want||!TOUCH);}$('hud').classList.toggle('bigpip',pipOn&&pipBig);}
@@ -978,17 +990,19 @@ function updateEnemies(dt){const p=P1;for(const e of enemies){
 function breach(dmg,name){baseHp=Math.max(0,baseHp-dmg);stats.breach++;toast(name+' REACHED THE BASE');explosion(BASE.x+rnd(-30,30),BASE.y+3,BASE.z+rnd(-30,30),2);Snd.boom(.5,1,900,true);Snd.tone(200,.5,.2,'square');
   if(baseHp<=0&&state==='play'){state='dying';overWhy='base';timer=2.2;Snd.engine(0,false);}}
 function updateSquads(dt){let na=0,nb=0,nr=0;const p=P1;for(const q of squads){if(!q.alive)continue;let live=0;for(const m of q.men)if(m.a)live++;if(!live){q.alive=false;toast(q.name+' SQUAD STOPPED');continue;}
-    const dpx=p.x-q.x,dpz=p.z-q.z,dp=Math.hypot(dpx,dpz)||1,hunt=q.cmdo||!baseOn,tx=hunt?p.x:BASE.x,tz=hunt?p.z:BASE.z,dx=tx-q.x,dz=tz-q.z,d=Math.hypot(dx,dz)||1;
-    const far=p.alive&&dp<1500&&los(q.x,q.y+1.5,q.z,p.x,p.y+1.9,p.z),sees=far&&dp<380;if(far&&Math.abs(angDiff(Math.atan2(-dpx,-dpz),p.tyaw))<Math.PI/2)q.vis=Math.max(q.vis,.6);else q.vis-=dt;
-    if(q.guard&&sees&&dp<150){q.guard=false;q.cmdo=true;}
-    q.hold=q.guard||(hunt&&(dp<30||(dp<170&&sees)));
-    if(q.hold){if(sees||!q.guard)q.yaw=Math.atan2(dpx,dpz);}else{q.yaw=Math.atan2(dx,dz);q.x+=dx/d*q.speed*dt;q.z+=dz/d*q.speed*dt;}
+    const dpx=p.x-q.x,dpz=p.z-q.z,dp=Math.hypot(dpx,dpz)||1,far=p.alive&&dp<1500&&los(q.x,q.y+1.5,q.z,p.x,p.y+1.9,p.z),sees=far&&dp<140,fight=far&&dp<260;
+    if(far&&Math.abs(angDiff(Math.atan2(-dpx,-dpz),p.tyaw))<Math.PI/2)q.vis=Math.max(q.vis,.6);else q.vis-=dt;
+    let tx,tz,toBase=false;
+    if(fight){tx=p.x;tz=p.z;}else if(baseOn){tx=BASE.x;tz=BASE.z;toBase=true;}
+    else{q.wt-=dt;if(q.wt<=0||Math.hypot(q.wx-q.x,q.wz-q.z)<6){q.wt=rnd(14,26);const a=rnd(TAU),r=rnd(25,q.guard?70:140);q.wx=q.hx+Math.sin(a)*r;q.wz=q.hz+Math.cos(a)*r;}tx=q.wx;tz=q.wz;}
+    const dx=tx-q.x,dz=tz-q.z,d=Math.hypot(dx,dz)||1;q.hold=fight&&(dp<30||(dp<110&&sees));
+    if(q.hold)q.yaw=Math.atan2(dpx,dpz);else{const v=q.speed*(fight||toBase?1:.45);q.yaw=Math.atan2(dx,dz);q.x+=dx/d*v*dt;q.z+=dz/d*v*dt;}
     q.y=Hg(q.x,q.z);
-    if(!hunt&&!q.guard&&d<BASE.r){q.alive=false;breach(live*3,'INFANTRY');continue;}
-    if(sees){p.reveal=Math.max(p.reveal,3);q.rpgT-=dt;if(q.rpgT<=0){q.rpgT=q.cmdo?rnd(4,7):rnd(6,10);const m=q.men.find(m=>m.a&&m.rpg);
+    if(toBase&&d<BASE.r){q.alive=false;breach(live*3,q.name);continue;}
+    if(sees){p.reveal=Math.max(p.reveal,3);q.rpgT-=dt;if(q.rpgT<=0){q.rpgT=q.cmdo?rnd(5,8):rnd(7,11);const m=q.men.find(m=>m.a&&m.rpg);
         if(m){const ox=q.x+m.ox,oz=q.z+m.oz,oy=Hg(ox,oz)+1.5,ex=p.x-ox,ez=p.z-oz,ed=Math.hypot(ex,ez),s=spawnShell(ox,oy,oz,Math.atan2(ex,ez)+gauss()*.014*(1+Math.abs(p.speed)/5),Math.atan2(p.y+1.5-oy,ed)+gauss()*.008,115,q,1,0,true);
-          s.rpg=true;s.life=4.5;q.vis=30;for(let i=0;i<6;i++)smoke.emit(ox,oy,oz,-ex/ed*rnd(3,9)+gauss(),rnd(.5,2),-ez/ed*rnd(3,9)+gauss(),rnd(.8,1.5),1.5,6,.8,.8,.78,.5,0,1);Snd.boom(clamp(120/ed,.1,.5),.5,2500,false);toast('RPG INCOMING');}}}
-    for(const m of q.men){if(!m.a)continue;if(!q.hold)m.ph+=dt*8;const x=q.x+m.ox,z=q.z+m.oz,pose=q.hold?0:(Math.floor(m.ph/Math.PI)&1),col=q.cmdo?_cc:_cw;
+          s.rpg=true;s.life=2.2;q.vis=30;for(let i=0;i<6;i++)smoke.emit(ox,oy,oz,-ex/ed*rnd(3,9)+gauss(),rnd(.5,2),-ez/ed*rnd(3,9)+gauss(),rnd(.8,1.5),1.5,6,.8,.8,.78,.5,0,1);Snd.boom(clamp(120/ed,.1,.5),.5,2500,false);toast('RPG INCOMING');}}}
+    for(const m of q.men){if(!m.a)continue;if(!q.hold)m.ph+=dt*(fight||toBase?8:4.5);const x=q.x+m.ox,z=q.z+m.oz,pose=q.hold?0:(Math.floor(m.ph/Math.PI)&1),col=q.cmdo?_cc:_cw;
       _e.set(0,q.yaw,0);_m.compose(_v.set(x,Hg(x,z),z),_q.setFromEuler(_e),_s.set(1.08,1.08,1.08));
       if(pose){if(nb<SOLD){soldB.setMatrixAt(nb,_m);soldB.setColorAt(nb++,col);}}else if(na<SOLD){soldA.setMatrixAt(na,_m);soldA.setColorAt(na++,col);}
       if(m.rpg&&nr<48){rpgM.setMatrixAt(nr,_m);rpgM.setColorAt(nr++,col);}}}
@@ -1049,7 +1063,7 @@ function updateHud(dt){const p=P1;
   setT('ammoT','105 MM  '+p.ammo);$('rlB').style.width=(100*(1-clamp(p.reload/RELOAD,0,1)))+'%';
   const hd=heading(camYaw);setT('hdg',dirName(hd)+' '+String(Math.round(hd)%360).padStart(3,'0'));
   let alive=0,sams=0;for(const e of enemies)if(e.alive&&!e.dummy){if(e.type==='SAM')sams++;else alive++;}let pend=0;if(M)for(const a of M.pending)pend+=a.units.length;
-  setT('mEn',tut&&tut.step<3?'TRAINING':MODE==='atk'?'SAM LAUNCHERS '+sams:'ENEMY '+(alive+pend));setT('mSt',p.onRamp?'ON RAMP. EXPOSED':p.reveal>0?'SPOTTED':'CONCEALED');$('mSt').classList.toggle('spot',p.reveal>0);
+  setT('mEn',tut&&tut.step<3?'TRAINING':MODE==='atk'?'SAM LAUNCHERS '+sams:'ENEMY '+(alive+pend));setT('mSt',p.rep?'REPAIRING ARMOR':p.onRamp?'ON RAMP. EXPOSED':p.reveal>0?'SPOTTED':'CONCEALED');$('mSt').classList.toggle('spot',p.reveal>0);
   const gd=tgt?tgt.d:900,gp=proj(p.x+Math.sin(p.tyaw)*gd,tgt?pipY:Hg(p.x+Math.sin(p.tyaw)*gd,p.z+Math.cos(p.tyaw)*gd)+1.5,p.z+Math.cos(p.tyaw)*gd);
   const gm=$('gm');if(gp&&p.alive){gm.style.display='';gm.style.transform='translate('+gp[0].toFixed(1)+'px,'+gp[1].toFixed(1)+'px)';gm.classList.toggle('rel',p.reload>0);gm.classList.toggle('on',!!tgt);}else gm.style.display='none';
   let mi=0;const mark=(x,y,z,cls,sel)=>{if(mi>=marks.length)return;const q=proj(x,y,z);if(!q||(pipOn&&pipR&&q[0]>pipR.left-8&&q[0]<pipR.right+8&&q[1]>pipR.top&&q[1]<pipR.bottom+14))return;const m=marks[mi++];m.className='mk'+cls+(sel?' sel':'');m.style.transform='translate('+q[0].toFixed(1)+'px,'+(q[1]-10).toFixed(1)+'px)';};
@@ -1103,8 +1117,8 @@ function briefing(){const hp=P1&&P1.hp>0?P1.hp:100;setupMission(scId);P1.hp=hp;s
 function startPlay(){Snd.init();state='play';show(null);hudC.wasT=false;}
 function missionClear(){const acc=stats.shots?Math.min(1,stats.hits/stats.shots):0,atk=MODE==='atk',b1=400,b2=Math.round(P1.hp)*2,b3=Math.round(acc*300),b4=atk?Math.max(0,300-stats.jets*100):Math.round(baseHp)*3,tot=b1+b2+b3+b4;score+=tot;
   $('clN').textContent='MISSION '+level+' COMPLETE  ·  '+M.name.toUpperCase();$('clear').querySelector('h2').textContent=atk?'BATTERY DESTROYED':'SECTOR HELD';
-  statRows($('clStats'),[['Vehicles destroyed',String(stats.kills)],['Accuracy',Math.round(acc*100)+' %'],['Time',Math.floor(stats.time/60)+':'+String(Math.floor(stats.time%60)).padStart(2,'0')],['Mission bonus','+'+b1],['Armor bonus','+'+b2],['Gunnery bonus','+'+b3],[atk?'Air cover bonus  '+stats.jets+' aircraft lost':'Base intact bonus','+'+b4],['Field repair','+40 armor']]);
-  $('clScore').textContent=score+' PTS';P1.hp=Math.min(100,P1.hp+40);state='clear';show('clear');Snd.engine(0,false);Snd.tone(523,.15,.15);setTimeout(()=>Snd.tone(784,.3,.15),170);}
+  statRows($('clStats'),[['Vehicles destroyed',String(stats.kills)],['Accuracy',Math.round(acc*100)+' %'],['Time',Math.floor(stats.time/60)+':'+String(Math.floor(stats.time%60)).padStart(2,'0')],['Mission bonus','+'+b1],['Armor bonus','+'+b2],['Gunnery bonus','+'+b3],[atk?'Air cover bonus  '+stats.jets+' aircraft lost':'Base intact bonus','+'+b4]]);
+  $('clScore').textContent=score+' PTS';P1.hp=100;state='clear';show('clear');Snd.engine(0,false);Snd.tone(523,.15,.15);setTimeout(()=>Snd.tone(784,.3,.15),170);}
 let saved=false;
 function gameOver(){state='over';saved=false;const q=overWhy==='quit';$('ovN').textContent=(q?'AFTER ':overWhy==='base'?'OVERRUN AT ':'KNOCKED OUT AT ')+M.name.toUpperCase();$('ovH').textContent=q?'CAMPAIGN ENDED':overWhy==='base'?'BASE LOST':'TANK DESTROYED';
   statRows($('ovStats'),[['Missions cleared',String(q?level:level-1)],['Vehicles destroyed',String(totalKills)]]);$('ovScore').textContent=score+' PTS';
