@@ -25,7 +25,7 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block}
   padding:calc(8px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left))}
 #top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start}
 .blk{background:rgba(18,19,14,.55);border-left:3px solid var(--sand);padding:4px 8px;font-size:14px;line-height:1.15;letter-spacing:.04em;width:max-content;max-width:100%}
-.blk b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--sand);display:block;white-space:nowrap}
+.blk b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--sand);display:block;white-space:nowrap;max-width:31vw;overflow:hidden;text-overflow:ellipsis}
 .blk span{display:block}
 #mSt.spot{color:var(--signal)}
 #tr{justify-self:end;display:flex;gap:8px;align-items:flex-start}
@@ -36,9 +36,9 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block}
 .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--olive);width:100%}
 .bar.low i{background:var(--signal)}
 #rl i{background:var(--sand)}
-.row{display:flex;justify-content:space-between;text-shadow:0 1px 2px #000;white-space:nowrap}
+.row{display:flex;justify-content:space-between;gap:6px;text-shadow:0 1px 2px #000;white-space:nowrap}
 #pauseBtn{pointer-events:auto;width:40px;height:40px;background:rgba(18,19,14,.6);border:1px solid var(--sand);color:var(--sand);font:700 16px var(--body);cursor:pointer}
-#radar{margin-top:6px;width:104px;height:104px;display:block}
+#radar{margin-top:6px;width:122px;height:122px;display:block}
 #gm{position:fixed;left:0;top:0;width:38px;height:38px;margin:-19px 0 0 -19px;border:2px solid var(--paper);border-radius:50%;opacity:.9;will-change:transform}
 #gm:before{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--paper)}
 #gm.rel{opacity:.4}
@@ -112,7 +112,7 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
 #err{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:18px;background:var(--basalt)}
 @media (max-height:430px){ .sheet{gap:8px} h1{font-size:42px} h2{font-size:30px} p{font-size:16px} button.b{padding:8px 14px;min-height:42px} .btns{flex-direction:row;flex-wrap:wrap}
   #tut{bottom:auto;top:calc(58px + env(safe-area-inset-top));left:auto;right:calc(60px + env(safe-area-inset-right));transform:none;width:min(44vw,400px)}
-  #pip{right:auto;left:calc(126px + env(safe-area-inset-left));top:calc(58px + env(safe-area-inset-top));width:min(46vh,190px);font-size:11px}
+  #pip{right:auto;left:calc(144px + env(safe-area-inset-left));top:calc(58px + env(safe-area-inset-top));width:min(46vh,190px);font-size:11px}
   #pip.big{left:50%;top:calc(52px + env(safe-area-inset-top));width:min(60vw,78vh)} }
 @media (prefers-reduced-motion:reduce){ #toast{transition:none} }
 </style>
@@ -155,7 +155,7 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
   <div class="sheet">
     <div class="eyebrow">GOLAN HEIGHTS · MERKAVA MK. 2</div>
     <h1>LONE MERKAVA</h1>
-    <p>One Israeli tank, no friendly forces. Hold the Golan ditch line or a Lebanon mountain road against Syrian armor, or push into Syrian ground to destroy a SAM battery.</p>
+    <p>One Israeli tank, no friendly forces. Hold the Golan ditch line against Syrian armor, or push into Syrian ground to destroy a SAM battery.</p>
     <div class="btns">
       <button class="b p" id="bStart">START CAMPAIGN</button>
       <button class="b" id="bPick">CHOOSE SCENARIO</button>
@@ -174,11 +174,9 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
     <div class="btns">
       <button class="b" id="pGD">GOLAN DEFENCE</button>
       <button class="b" id="pGA">GOLAN ATTACK</button>
-      <button class="b" id="pLD">LEBANON DEFENCE</button>
-      <button class="b" id="pLA">LEBANON ATTACK</button>
       <button class="b p" id="bBack3">BACK</button>
     </div>
-    <div class="note">After the first mission the campaign continues with a different scenario each time.</div>
+    <div class="note">After the first mission the campaign alternates between the two scenarios.</div>
   </div>
 </div>
 
@@ -248,7 +246,7 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
     <p>You command and lay the gun roughly. When it points near a target the gunner sight opens. Centre the cross with fine aim and fire. Range and elevation are automatic. A hit that does not kill halts the target for a few seconds. Your armor repairs itself once you have gone 10 seconds without being hit and are not firing, so pull back out of sight when it runs low. Rounds scatter more with distance: a sure hit at 300 m, about one in two at 2000 m.</p>
     <p>The ditch can be crossed only on a laid bridge or at the two ground passes, shown green on the map. Kill bridge layers and the columns must detour to a pass. Units that reach the base damage it.</p>
     <p>Firing ramps (sand squares on the map) lift you above the ground for long shots, but you are exposed on top. Stay spotted in one place and artillery finds you, so shoot and move. Infantry and commandos carry RPGs but can only use them inside about 140 m. Flooring the engine makes smoke that reveals you.</p>
-    <p>Attack missions: the SAM launchers can only be hit from close range. On the Golan they sit inside a round fort you enter through the rear gate. In Lebanon they sit among village buildings that stop your rounds. Enemy units are marked only once you have seen them.</p>
+    <p>Attack missions: the SAM launchers can only be hit from close range. They sit inside a round fort you enter through the rear gate. Enemy units are marked only once you have seen them.</p>
     <div class="btns"><button class="b p" id="bBack2">BACK</button></div>
   </div>
 </div>
@@ -427,7 +425,10 @@ function buildWorld(seed,sc){
       if(dp<-.5){R=.3;G=.25;B=.19;}else if(dp>.2||Math.abs(x-XD)<6){R=.52;G=.42;B=.29;}
       if(pk>.4&&Math.abs(x-XD)<40){R=.64;G=.56;B=.41;}if(rampH(x,z)>.4){R=.57;G=.47;B=.33;}}
     const rk2=roadK[i];if(rk2>0){const c=TH==='leb'?.38:.64,c2=TH==='leb'?.37:.56,c3=TH==='leb'?.36:.41;R=lerp(R,c,rk2*.9);G=lerp(G,c2,rk2*.9);B=lerp(B,c3,rk2*.9);}
-    if(fortRing(x,z)>.6){R=.56;G=.46;B=.32;}
+    for(const f of forts){if(!f.wall)continue;const d=Math.hypot(x-f.x,z-f.z);if(d>f.R+30)continue;const rg=fortRing(x,z),n2=h2(ix*3+1,iz*3+2);
+      if(rg>.4){const k=clamp(rg/2.5,0,1);R=lerp(R,.73+n2*.05,k);G=lerp(G,.65+n2*.04,k);B=lerp(B,.47+n2*.03,k);}
+      else if(d<f.R+2){R=lerp(R,.6,.85);G=lerp(G,.56,.85);B=lerp(B,.48,.85);}
+      else{const k=.45*(1-(d-f.R)/30);R=lerp(R,.62,k);G=lerp(G,.56,k);B=lerp(B,.45,k);}}
     if(baseOn){const db=Math.hypot(x-BASE.x,z-BASE.z);if(db<130){const k=sstep((130-db)/50)*.7;R=lerp(R,.62,k);G=lerp(G,.56,k);B=lerp(B,.44,k);}}
     const j=(h2(ix+7,iz+3)-.5)*.08;col[i*3]=R+j;col[i*3+1]=G+j;col[i*3+2]=B+j;}
   tGeo.attributes.position.needsUpdate=true;tGeo.attributes.color.needsUpdate=true;tGeo.computeVertexNormals();tGeo.computeBoundingSphere();
@@ -730,7 +731,7 @@ const SCN={
     txt:'Lebanon mountains. Syrian columns are coming down two mountain roads toward the base. Cliffs and canyons cannot be crossed off the roads, by you or by them. Hold the roads and keep them out of the base.'},
   LA:{id:'LA',th:'leb',mode:'atk',name:'Lebanon Attack',place:['Damour Coast','Zahrani Road','Jiyeh Heights'],
     txt:'Lebanon coast. Drive inland on the mountain roads and destroy the SAM battery in the village to the east. Buildings shield it, so enter the village and fire from close range. Expect tanks in ambush along the roads and infantry behind lone buildings at the junctions.'}};
-const scIds=['GD','GA','LD','LA'];
+const scIds=['GD','GA'];
 function missionDef(sc,tutorial){const r=Math.random,tank=()=>{const q=r();return q<.08?'T72':q<.36?'T62':'T55';},axes=[],helis=[],id=sc.id;
   if(id==='GD'){const centre={z:(r()-.5)*360,delay:0,name:'CENTRE',units:[['BL','bl']]};for(let i=0;i<(tutorial?3:4);i++)centre.units.push([tutorial?'T55':tank(),'assault']);axes.push(centre);
     if(!tutorial){const s=r()<.5?1:-1;axes.push({z:s*(620+r()*300),delay:25,name:s>0?'NORTH WING':'SOUTH WING',units:[['BL','bl'],[tank(),'break'],[tank(),'break'],['BMP','break'],['BMP','break']]});
@@ -1031,11 +1032,10 @@ const marks=[];for(let i=0;i<26;i++){const d=document.createElement('div');d.cla
 function proj(x,y,z){_v.set(x,y,z).applyMatrix4(cam.matrixWorldInverse);if(_v.z>-1)return null;_v.applyMatrix4(cam.projectionMatrix);return[(_v.x*.5+.5)*W,(-_v.y*.5+.5)*HH];}
 const rc=$('radar').getContext('2d');let radarN=0;
 function drawRadar(){const c=rc,R=96;c.clearRect(0,0,208,208);c.save();c.translate(104,104);
-  c.fillStyle='rgba(18,19,14,.55)';c.beginPath();c.arc(0,0,R,0,TAU);c.fill();c.strokeStyle='rgba(220,203,150,.6)';c.lineWidth=2;c.stroke();c.clip();
+  c.fillStyle='rgba(16,17,12,.86)';c.beginPath();c.arc(0,0,R,0,TAU);c.fill();c.strokeStyle='rgba(220,203,150,.6)';c.lineWidth=2;c.stroke();c.clip();
   const sc=R/2300,cs=Math.cos(camYaw),sn=Math.sin(camYaw),tr=(x,z)=>{const dx=x-P1.x,dz=z-P1.z;return[(-dx*cs+dz*sn)*sc,-(dx*sn+dz*cs)*sc];},atk=MODE==='atk';
   const line=(pts)=>{c.beginPath();pts.forEach((q,i)=>{const t=tr(q[0],q[1]);if(i)c.lineTo(t[0],t[1]);else c.moveTo(t[0],t[1]);});c.stroke();};
   c.lineWidth=1;c.strokeStyle='rgba(220,203,150,.22)';c.beginPath();c.arc(0,0,R*1000/2300,0,TAU);c.arc(0,0,R*2000/2300,0,TAU);c.stroke();
-  c.strokeStyle='rgba(215,205,165,.5)';c.lineWidth=2;for(const o of roads)line(o.pts);
   c.strokeStyle='#7a5a34';c.lineWidth=4;for(const o of canyons)line(o.pts);
   let a,b;
   if(ditchOn){c.strokeStyle='#8a6a3a';c.lineWidth=4;line([[XD,Z0],[XD,Z1]]);c.strokeStyle='#9fb05a';c.lineWidth=6;for(const z of passZ)line([[XD,z-26],[XD,z+26]]);}
@@ -1045,15 +1045,15 @@ function drawRadar(){const c=rc,R=96;c.clearRect(0,0,208,208);c.save();c.transla
   c.fillStyle='#b9ae96';for(const h of blocks){if(h.big)continue;a=tr((h.x0+h.x1)/2,(h.z0+h.z1)/2);c.fillRect(a[0]-2.5,a[1]-2.5,5,5);}
   if(baseOn){a=tr(BASE.x,BASE.z);c.strokeStyle='#8a9358';c.lineWidth=3;c.strokeRect(a[0]-8,a[1]-8,16,16);}
   const dot=(x,z,col,r)=>{let q=tr(x,z);const m=Math.hypot(q[0],q[1]);if(m>R-6){q[0]*=(R-6)/m;q[1]*=(R-6)/m;}c.fillStyle=col;c.beginPath();c.arc(q[0],q[1],r,0,TAU);c.fill();return q;};
-  if(atk&&M.guess){const q=tr(M.guess.x,M.guess.z),r0=Math.max(9,270*sc),g=M.guess;c.strokeStyle='rgba(255,60,46,.9)';c.lineWidth=2;c.lineJoin='round';
+  if(atk&&M.guess){const q=tr(M.guess.x,M.guess.z),r0=Math.max(9,270*sc),g=M.guess;c.strokeStyle='rgba(255,60,46,.95)';c.lineWidth=3.2;c.lineJoin='round';
     for(let k=0;k<2;k++){c.beginPath();for(let a2=-.2;a2<=TAU+.5;a2+=.22){const rr=r0*(1+.09*Math.sin(3*a2+g.ph+k)+.05*Math.sin(7*a2+k*2))+k*1.5,px=q[0]+Math.cos(a2+g.ph)*rr,py=q[1]+Math.sin(a2+g.ph)*rr*.9;if(a2<=-.2+1e-6)c.moveTo(px,py);else c.lineTo(px,py);}c.stroke();}}
   for(const it of intel){const p0=tr(it.x0,it.z0),p1=tr(it.x1,it.z1),dx=p1[0]-p0[0],dy=p1[1]-p0[1],l=Math.hypot(dx,dy);if(l<4)continue;const nx=-dy/l,ny=dx/l,cx=(p0[0]+p1[0])/2+nx*l*it.c,cy=(p0[1]+p1[1])/2+ny*l*it.c;
-    let hx=p1[0]-cx,hy=p1[1]-cy;const hl=Math.hypot(hx,hy)||1;hx/=hl;hy/=hl;const bx=p1[0]-hx*10,by=p1[1]-hy*10;
-    c.globalAlpha=Math.min(1,it.t/8);c.strokeStyle='#ff3b2e';c.fillStyle='#ff3b2e';c.lineWidth=1.8;
-    for(const o of[-2.6,2.6]){c.beginPath();c.moveTo(p0[0]+nx*o,p0[1]+ny*o);c.quadraticCurveTo(cx+nx*o,cy+ny*o,bx-hy*o,by+hx*o);c.stroke();}
-    c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(bx-hy*7,by+hx*7);c.lineTo(bx+hy*7,by-hx*7);c.closePath();c.fill();c.globalAlpha=1;}
-  for(const e of enemies){if(e.type==='SAM'||(e.alive?e.vis<=0&&!e.dummy:!e.known&&!e.dummy))continue;dot(e.x,e.z,!e.alive?'rgba(120,120,110,.7)':e.dummy?'#ece6cf':e.type==='BL'?'#ffc531':'#ff5b2e',e.alive?5.5:3);}
-  for(const q of squads)if(q.alive&&q.vis>0)dot(q.x,q.z,'#ece6cf',4);for(const h of helis)if(h.alive&&Math.abs(angDiff(Math.atan2(h.x-P1.x,h.z-P1.z),P1.tyaw))<Math.PI/2){dot(h.x,h.z,'#fff',7);dot(h.x,h.z,'#ff5b2e',4);}
+    let hx=p1[0]-cx,hy=p1[1]-cy;const hl=Math.hypot(hx,hy)||1;hx/=hl;hy/=hl;const bx=p1[0]-hx*14,by=p1[1]-hy*14;
+    c.globalAlpha=Math.min(1,it.t/8);c.strokeStyle='#ff3b2e';c.fillStyle='#ff3b2e';c.lineWidth=3;
+    for(const o of[-3.6,3.6]){c.beginPath();c.moveTo(p0[0]+nx*o,p0[1]+ny*o);c.quadraticCurveTo(cx+nx*o,cy+ny*o,bx-hy*o,by+hx*o);c.stroke();}
+    c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(bx-hy*10,by+hx*10);c.lineTo(bx+hy*10,by-hx*10);c.closePath();c.fill();c.globalAlpha=1;}
+  for(const e of enemies){if(e.type==='SAM'||(e.alive?e.vis<=0&&!e.dummy:!e.known&&!e.dummy))continue;const q=dot(e.x,e.z,!e.alive?'rgba(150,150,140,.8)':e.dummy?'#ece6cf':e.type==='BL'?'#ffc531':'#ff3b2e',e.alive?8:3.5);if(e.alive){c.strokeStyle='#fff';c.lineWidth=2.2;c.beginPath();c.arc(q[0],q[1],8,0,TAU);c.stroke();}}
+  for(const q of squads)if(q.alive&&q.vis>0)dot(q.x,q.z,'#ece6cf',5.5);for(const h of helis)if(h.alive&&Math.abs(angDiff(Math.atan2(h.x-P1.x,h.z-P1.z),P1.tyaw))<Math.PI/2){dot(h.x,h.z,'#fff',7);dot(h.x,h.z,'#ff5b2e',4);}
   const ty=angDiff(P1.tyaw,camYaw);c.strokeStyle='#ece6cf';c.lineWidth=2;c.beginPath();c.moveTo(0,0);c.lineTo(-Math.sin(ty)*R,-Math.cos(ty)*R);c.stroke();
   c.fillStyle='#ece6cf';c.fillRect(-5,-7,10,14);c.restore();
   c.fillStyle='#dccb96';c.font='bold 20px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('N',104+sn*(R-12),104-cs*(R-12));}
@@ -1063,7 +1063,7 @@ function updateHud(dt){const p=P1;
   setT('ammoT','105 MM  '+p.ammo);$('rlB').style.width=(100*(1-clamp(p.reload/RELOAD,0,1)))+'%';
   const hd=heading(camYaw);setT('hdg',dirName(hd)+' '+String(Math.round(hd)%360).padStart(3,'0'));
   let alive=0,sams=0;for(const e of enemies)if(e.alive&&!e.dummy){if(e.type==='SAM')sams++;else alive++;}let pend=0;if(M)for(const a of M.pending)pend+=a.units.length;
-  setT('mEn',tut&&tut.step<3?'TRAINING':MODE==='atk'?'SAM LAUNCHERS '+sams:'ENEMY '+(alive+pend));setT('mSt',p.rep?'REPAIRING ARMOR':p.onRamp?'ON RAMP. EXPOSED':p.reveal>0?'SPOTTED':'CONCEALED');$('mSt').classList.toggle('spot',p.reveal>0);
+  setT('mEn',tut&&tut.step<3?'TRAINING':MODE==='atk'?'SAM LEFT '+sams:'ENEMY '+(alive+pend));setT('mSt',p.rep?'REPAIRING':p.onRamp?'ON RAMP':p.reveal>0?'SPOTTED':'CONCEALED');$('mSt').classList.toggle('spot',p.reveal>0);
   const gd=tgt?tgt.d:900,gp=proj(p.x+Math.sin(p.tyaw)*gd,tgt?pipY:Hg(p.x+Math.sin(p.tyaw)*gd,p.z+Math.cos(p.tyaw)*gd)+1.5,p.z+Math.cos(p.tyaw)*gd);
   const gm=$('gm');if(gp&&p.alive){gm.style.display='';gm.style.transform='translate('+gp[0].toFixed(1)+'px,'+gp[1].toFixed(1)+'px)';gm.classList.toggle('rel',p.reload>0);gm.classList.toggle('on',!!tgt);}else gm.style.display='none';
   let mi=0;const mark=(x,y,z,cls,sel)=>{if(mi>=marks.length)return;const q=proj(x,y,z);if(!q||(pipOn&&pipR&&q[0]>pipR.left-8&&q[0]<pipR.right+8&&q[1]>pipR.top&&q[1]<pipR.bottom+14))return;const m=marks[mi++];m.className='mk'+cls+(sel?' sel':'');m.style.transform='translate('+q[0].toFixed(1)+'px,'+(q[1]-10).toFixed(1)+'px)';};
