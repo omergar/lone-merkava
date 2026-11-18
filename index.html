@@ -39,7 +39,7 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block}
 .row{display:flex;justify-content:space-between;gap:6px;text-shadow:0 1px 2px #000;white-space:nowrap}
 #pauseBtn{pointer-events:auto;width:40px;height:40px;background:rgba(18,19,14,.6);border:1px solid var(--sand);color:var(--sand);font:700 16px var(--body);cursor:pointer}
 #radar{margin-top:6px;width:122px;height:122px;display:block}
-#gm{position:fixed;left:0;top:0;width:38px;height:38px;margin:-19px 0 0 -19px;border:2px solid var(--paper);border-radius:50%;opacity:.9;will-change:transform}
+#gm{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:1.25px solid var(--paper);border-radius:50%;opacity:.6;will-change:transform}
 #gm:before{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--paper)}
 #gm.rel{opacity:.4}
 #gm.on{border-color:var(--signal)}
@@ -60,16 +60,17 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block}
 
 /* gunner sight inset */
 #pip{position:fixed;right:calc(10px + env(safe-area-inset-right));top:calc(88px + env(safe-area-inset-top));width:min(47vw,200px);aspect-ratio:1;border:7px solid #0b0c0a;border-radius:50%;box-shadow:0 0 0 2px #2a2b25,0 4px 14px rgba(0,0,0,.55);
-  pointer-events:auto;cursor:pointer;overflow:hidden;container-type:inline-size;font-family:"Share Tech Mono",ui-monospace,Menlo,Consolas,monospace;color:#f2f2ea;text-shadow:0 0 2px #000,0 1px 1px #000;letter-spacing:.04em}
+  pointer-events:auto;cursor:pointer;overflow:hidden;container-type:inline-size;font-family:"Share Tech Mono",ui-monospace,Menlo,Consolas,monospace;color:rgba(240,238,226,.85);text-shadow:0 0 1px rgba(0,0,0,.8);letter-spacing:.04em}
 #pip.big{right:auto;left:50%;transform:translateX(-50%);top:calc(88px + env(safe-area-inset-top));width:min(92vw,56vh)}
 #hud.bigpip #radar,#hud.bigpip #marks,#hud.bigpip #gm{visibility:hidden}
 #pip:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 58%,rgba(0,0,0,.28) 80%,rgba(0,0,0,.7) 100%);pointer-events:none}
 #pip svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-#pip svg *{stroke:#f2f2ea;stroke-width:1.1;fill:none;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 1px #000)}
-#pip .tx{position:absolute;white-space:nowrap;font-size:max(9px,5.4cqw);line-height:1.15;z-index:1}
+#pip svg *{stroke:rgba(240,238,226,.72);stroke-width:.6;fill:none;vector-effect:non-scaling-stroke}
+#pip svg .dt{fill:rgba(255,90,60,.9);stroke:none}
+#pip .tx{position:absolute;white-space:nowrap;font-size:max(8px,4.6cqw);line-height:1.15;z-index:1}
 #pipM{left:50%;top:14%;transform:translateX(-50%)}
-#pipN{left:50%;top:23%;transform:translateX(-50%);max-width:60%;overflow:hidden;text-overflow:ellipsis;font-size:max(9px,4.8cqw);padding:0 .5em;border:1px solid #f2f2ea;box-shadow:0 0 1px #000}
-#pipR{left:50%;top:75%;transform:translateX(-50%);font-size:max(14px,10cqw);letter-spacing:.06em}
+#pipN{left:50%;top:23%;transform:translateX(-50%);max-width:60%;overflow:hidden;text-overflow:ellipsis;font-size:max(8px,4.4cqw);padding:0 .45em;border:1px solid rgba(240,238,226,.55)}
+#pipR{left:50%;top:76%;transform:translateX(-50%);font-size:max(12px,8cqw);letter-spacing:.06em}
 #pipL{left:15%;top:64%}
 #pipF{right:15%;top:64%;text-align:right}
 #pipM.ld{color:var(--amber)}
@@ -148,7 +149,7 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
   <div id="dmg"><i></i></div>
   <div id="marks"></div>
   <div id="gm"></div>
-  <div id="pip" class="hide"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="2.2"/><path d="M44 50H47.4M52.6 50H56M50 44V47.4M50 52.6V56M32 50H41M59 50H68M18 50H27M73 50H82M40 47.5V52.5M60 47.5V52.5M38 46H44M56 46H62M38 54H44M56 54H62"/></svg>
+  <div id="pip" class="hide"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 41V48.6M50 51.4V59M36 50H48.6M51.4 50H64M24 50H32M68 50H76M43 49V51M57 49V51M50 62V63.5M50 66V67.5M50 70V71.5"/><circle class="dt" cx="50" cy="50" r=".45"/></svg>
     <span class="tx" id="pipM">SABOT</span><span class="tx" id="pipN">NO TARGET</span><span class="tx" id="pipR">1200</span><span class="tx" id="pipL">LASER</span><span class="tx" id="pipF">TGT</span></div>
   <div id="toast"></div>
   <div id="warn" class="hide">LEAVING THE SECTOR. TURN BACK.</div>
@@ -633,16 +634,34 @@ function crewAnim(p,dt){const rev=p.speed<-.6,ta=rev?angDiff(p.yaw+Math.PI,p.tya
   const acc=dt>0?(p.speed-p.ps)/dt:0;p.ps=p.speed;const sp=Math.abs(p.speed);
   for(const q of p.ants){q.v+=(-q.k*q.a-2.2*q.v-acc*.6)*dt+(sp>1.5&&Math.random()<dt*2.2?gauss()*sp*.07:0);q.a+=q.v*dt;q.w+=(-q.k*q.b-2.2*q.w)*dt+(sp>1.5&&Math.random()<dt*1.5?gauss()*sp*.05:0);q.b+=q.w*dt;
     q.a=clamp(q.a,-.5,.5);q.b=clamp(q.b,-.4,.4);q.m.rotation.x=q.a;q.m.rotation.z=q.b;}}
-function soldierGeo(a){const u=0x7a774f,d=0x54533a,sk=0xb38b68,p=[];
-  for(const s of[1,-1]){const t=s*a,f=-t*.8;p.push(P(box(.14,.82,.16),u,s*.1,.92-.41*Math.cos(t),-.41*Math.sin(t),t),P(box(.13,.1,.28),DK,s*.1,.96-.82*Math.cos(t),-.82*Math.sin(t)+.05,t),
-    P(box(.1,.55,.11),u,s*.27,1.42-.275*Math.cos(f),-.275*Math.sin(f),f),P(box(.09,.09,.1),sk,s*.27,1.42-.6*Math.cos(f),-.6*Math.sin(f)));}
-  p.push(P(box(.42,.56,.24),u,0,1.2,0),P(box(.44,.08,.26),d,0,.98,0),P(box(.1,.5,.26),d,.12,1.22,0,0,0,.25),P(box(.3,.36,.15),d,0,1.24,-.19),P(cylY(.06,.1,8),sk,0,1.52,0),
-    P(new T.SphereGeometry(.11,10,8),sk,0,1.63,.01),P(new T.SphereGeometry(.145,12,6,0,TAU,0,Math.PI/2),0x4d5236,0,1.64,0),P(box(.05,.08,.86),DK,.04,1.18,.2,0,.9,0),P(box(.05,.14,.07),DK,.14,1.1,.3));
-  return merge(p);}
-const SOLD=160,matSold=new T.MeshLambertMaterial({vertexColors:true}),soldA=new T.InstancedMesh(soldierGeo(.45),matSold,SOLD),soldB=new T.InstancedMesh(soldierGeo(-.45),matSold,SOLD),
-  rpgM=new T.InstancedMesh(merge([P(cylZ(.045,.95,10),0x5a5c40,.2,1.52,.1),P(cylZ(.0,.3,10,.085),0x4a5034,.2,1.52,.7),P(cylZ(.085,.12,10),0x4a5034,.2,1.52,.5)]),matSold,48);
-const _cw=new T.Color(1,1,1),_cc=new T.Color(.5,.6,.46);
-for(const m of[soldA,soldB,rpgM]){m.frustumCulled=false;m.setColorAt(0,_cw);m.count=0;scene.add(m);}
+const SOLD=160,matSold=new T.MeshLambertMaterial({vertexColors:true}),HIP=.93;
+const SG=(()=>{const u=0x76734c,u2=0x6b6845,d=0x4e4d36,sk=0xb08766,bt=0x2b2620,hm=0x4d5236,c=(r1,r2,l,sg)=>new T.CylinderGeometry(r1,r2,l,sg||10);
+  const body=merge([P(c(.15,.14,.2),u2,0,.06,0),P(c(.2,.165,.5),u,0,.38,0),P(c(.175,.175,.07),d,0,.17,0),P(new T.SphereGeometry(.2,12,8,0,TAU,0,Math.PI/2),u,0,.62,0),
+    P(box(.3,.15,.07),d,0,.42,.13),P(box(.07,.1,.06),d,-.11,.2,.15),P(box(.07,.1,.06),d,.11,.2,.15),P(box(.06,.48,.03),d,.11,.42,.155,0,0,.42),
+    P(box(.28,.34,.15),d,0,.42,-.2),P(c(.05,.05,.26,8),0x5d5a40,0,.62,-.22,0,0,Math.PI/2),
+    P(c(.055,.06,.08),sk,0,.7,0),P(new T.SphereGeometry(.1,14,10),sk,0,.8,.012),P(box(.11,.025,.02),0x2a241e,0,.81,.1),
+    P(new T.SphereGeometry(.138,16,9,0,TAU,0,Math.PI*.55),hm,0,.81,-.005),P(c(.15,.152,.022,18),hm,0,.83,-.005),
+    P(box(.045,.07,.82),0x23231f,.05,.36,.3,-.32,0,0),P(box(.04,.13,.06),0x23231f,.05,.24,.35,-.32,0,0),P(box(.045,.08,.12),0x3a3326,.05,.47,.02,-.32,0,0)]);
+  for(let i=0;i<body.attributes.position.count;i++)body.attributes.position.setZ(i,body.attributes.position.getZ(i)*.8);
+  const thigh=merge([P(c(.082,.068,.46),u2,0,-.23,0),P(new T.SphereGeometry(.072,10,8),u2,0,-.46,0),P(box(.09,.12,.05),d,.06,-.24,0)]);
+  const shin=merge([P(c(.062,.05,.4),u2,0,-.2,0),P(c(.06,.064,.12),bt,0,-.4,0),P(box(.11,.075,.25),bt,0,-.455,.045)]);
+  const arm=merge([P(new T.SphereGeometry(.07,10,8),u,0,0,0),P(c(.065,.055,.3),u,0,-.15,0),P(new T.SphereGeometry(.055,10,8),u,0,-.3,0),P(c(.05,.045,.27),u,0,-.31,.13,Math.PI/2-.25,0,0),P(new T.SphereGeometry(.048,10,8),sk,0,-.34,.28)]);
+  const rpg=merge([P(cylZ(.05,1,12),0x58603e,0,0,0),P(cylZ(.0,.3,12,.09),0x4a5034,0,0,.62),P(cylZ(.09,.12,12),0x4a5034,0,0,.48),P(box(.04,.12,.05),0x23231f,0,-.08,.05)]);
+  return{body,thigh,shin,arm,rpg};})();
+const solB=new T.InstancedMesh(SG.body,matSold,SOLD),solT=new T.InstancedMesh(SG.thigh,matSold,SOLD*2),solS=new T.InstancedMesh(SG.shin,matSold,SOLD*2),solA=new T.InstancedMesh(SG.arm,matSold,SOLD*2),rpgM=new T.InstancedMesh(SG.rpg,matSold,48);
+const _cw=new T.Color(1,1,1),_cc=new T.Color(.62,.72,.56),SOLM=[solB,solT,solS,solA,rpgM];
+for(const m of SOLM){m.frustumCulled=false;m.setColorAt(0,_cw);m.count=0;m.castShadow=false;scene.add(m);}
+const _mB=new T.Matrix4(),_mA=new T.Matrix4(),_mC=new T.Matrix4(),_mR=new T.Matrix4();
+function drawMan(n,x,z,yaw,ph,mode,amp,rpg,col){ // mode 0 walk, 1 kneel
+  const gy=Hg(x,z),kneel=mode===1,bob=kneel?0:.035*Math.abs(Math.cos(ph)),lean=kneel?.15:amp*.22;
+  _mB.makeRotationY(yaw).setPosition(x,gy+(kneel?.52:HIP+bob-.02*amp),z);_mB.multiply(_mR.makeRotationX(lean));_mB.multiply(_mC.makeScale(1.06,1.06,1.06));
+  solB.setMatrixAt(n,_mB);solB.setColorAt(n,col);
+  for(let k=0;k<2;k++){const sd=k?1:-1,i=n*2+k;let th,kn;
+    if(kneel){th=k?-1.5:-.08;kn=k?1.5:1.55;}else{const s=Math.sin(ph+k*Math.PI),cs=Math.cos(ph+k*Math.PI);th=amp*s-lean*.6;kn=.12+amp*1.5*Math.max(0,cs);}
+    _mA.copy(_mB).multiply(_mC.makeTranslation(sd*.105,0,0)).multiply(_mR.makeRotationX(th));solT.setMatrixAt(i,_mA);solT.setColorAt(i,col);
+    _mA.multiply(_mC.makeTranslation(0,-.46,0)).multiply(_mR.makeRotationX(kn));solS.setMatrixAt(i,_mA);solS.setColorAt(i,col);
+    const sw=kneel?-.2:-amp*.45*Math.sin(ph+k*Math.PI)*.5-.1;_mA.copy(_mB).multiply(_mC.makeTranslation(sd*.215,.6,0)).multiply(_mR.makeRotationX(sw)).multiply(_mC.makeRotationZ(sd*.12));solA.setMatrixAt(i,_mA);solA.setColorAt(i,col);}
+  if(rpg>=0){_mA.copy(_mB).multiply(_mC.makeTranslation(.2,.7,-.05)).multiply(_mR.makeRotationX(kneel?.02:.5));rpgM.setMatrixAt(rpg,_mA);rpgM.setColorAt(rpg,col);}}
 const heliGeo=(()=>{const c=0x8a8358,c2=0x6c7048,gl=0x232a30,bl=0x9aa6ad,p=[];
   p.push(P(cylZ(1.25,8.5,20),c,0,2.3,0),P(new T.SphereGeometry(1.25,18,12),gl,0,2.3,4.2),P(cylZ(.45,3.4,18,1.25),c,0,2.5,-5.9),P(cylZ(.2,6.6,12,.42),c2,0,2.9,-10.8),
     P(box(.14,2.6,1.2),c2,0,4,-13.8,-.5),P(box(2.6,.1,.6),c2,0,2.95,-12.6),P(box(1.5,.75,4.4),c2,0,3.75,.6),P(cylZ(.3,1,12),DK,.5,3.8,3),P(cylZ(.3,1,12),DK,-.5,3.8,3),P(cylY(.16,.9,8),DK,0,4.3,.4),
@@ -755,7 +774,7 @@ const DIRS=['N','NE','E','SE','S','SW','W','NW'];
 const heading=yaw=>((-yaw*180/Math.PI)%360+360)%360;
 const dirName=deg=>DIRS[Math.round(deg/45)%8];
 
-function clearField(){for(const e of enemies){scene.remove(e.g);e.wmat.map.dispose();e.tmat.map.dispose();e.wmat.dispose();e.tmat.dispose();}enemies=[];for(const b of bridges)scene.remove(b.mesh);bridges=[];squads=[];soldA.count=soldB.count=rpgM.count=0;for(const h of helis)scene.remove(h.g);helis=[];incoming=[];for(const j of jets)scene.remove(j.m);jets=[];aaM=[];shells=[];trSize.fill(0);smoke.clear();fire.clear();}
+function clearField(){for(const e of enemies){scene.remove(e.g);e.wmat.map.dispose();e.tmat.map.dispose();e.wmat.dispose();e.tmat.dispose();}enemies=[];for(const b of bridges)scene.remove(b.mesh);bridges=[];squads=[];for(const m of SOLM)m.count=0;for(const h of helis)scene.remove(h.g);helis=[];incoming=[];for(const j of jets)scene.remove(j.m);jets=[];aaM=[];shells=[];trSize.fill(0);smoke.clear();fire.clear();}
 function setupMission(id,asMenu){
   clearField();const sc=SCN[asMenu?'GD':id],tutorial=!asMenu&&sc.id==='GD'&&level===1&&!store.get('lm_tut',false);
   buildWorld(asMenu?3:(Math.random()*1e6|0)+7,sc);M=missionDef(sc,tutorial);M.t=0;M.pending=asMenu?[]:M.axes.slice();
@@ -1001,7 +1020,7 @@ function updateEnemies(dt){const p=P1;for(const e of enemies){
     roll(e,dt);seat(e);}}
 function breach(dmg,name){baseHp=Math.max(0,baseHp-dmg);stats.breach++;toast(name+' REACHED THE BASE');explosion(BASE.x+rnd(-30,30),BASE.y+3,BASE.z+rnd(-30,30),2);Snd.boom(.5,1,900,true);Snd.tone(200,.5,.2,'square');
   if(baseHp<=0&&state==='play'){state='dying';overWhy='base';timer=2.2;Snd.engine(0,false);}}
-function updateSquads(dt){let na=0,nb=0,nr=0;const p=P1;for(const q of squads){if(!q.alive)continue;let live=0;for(const m of q.men)if(m.a)live++;if(!live){q.alive=false;toast(q.name+' SQUAD STOPPED');continue;}
+function updateSquads(dt){let na=0,nr=0;const p=P1;for(const q of squads){if(!q.alive)continue;let live=0;for(const m of q.men)if(m.a)live++;if(!live){q.alive=false;toast(q.name+' SQUAD STOPPED');continue;}
     const dpx=p.x-q.x,dpz=p.z-q.z,dp=Math.hypot(dpx,dpz)||1,far=p.alive&&dp<1500&&los(q.x,q.y+1.5,q.z,p.x,p.y+1.9,p.z),sees=far&&dp<140,fight=far&&dp<260;
     if(far&&Math.abs(angDiff(Math.atan2(-dpx,-dpz),p.tyaw))<Math.PI/2)q.vis=Math.max(q.vis,.6);else q.vis-=dt;
     let tx,tz,toBase=false;
@@ -1014,11 +1033,11 @@ function updateSquads(dt){let na=0,nb=0,nr=0;const p=P1;for(const q of squads){i
     if(sees){p.reveal=Math.max(p.reveal,3);q.rpgT-=dt;if(q.rpgT<=0){q.rpgT=q.cmdo?rnd(5,8):rnd(7,11);const m=q.men.find(m=>m.a&&m.rpg);
         if(m){const ox=q.x+m.ox,oz=q.z+m.oz,oy=Hg(ox,oz)+1.5,ex=p.x-ox,ez=p.z-oz,ed=Math.hypot(ex,ez),s=spawnShell(ox,oy,oz,Math.atan2(ex,ez)+gauss()*.014*(1+Math.abs(p.speed)/5),Math.atan2(p.y+1.5-oy,ed)+gauss()*.008,115,q,1,0,true);
           s.rpg=true;s.life=2.2;q.vis=30;for(let i=0;i<6;i++)smoke.emit(ox,oy,oz,-ex/ed*rnd(3,9)+gauss(),rnd(.5,2),-ez/ed*rnd(3,9)+gauss(),rnd(.8,1.5),1.5,6,.8,.8,.78,.5,0,1);Snd.boom(clamp(120/ed,.1,.5),.5,2500,false);toast('RPG INCOMING');}}}
-    for(const m of q.men){if(!m.a)continue;if(!q.hold)m.ph+=dt*(fight||toBase?8:4.5);const x=q.x+m.ox,z=q.z+m.oz,pose=q.hold?0:(Math.floor(m.ph/Math.PI)&1),col=q.cmdo?_cc:_cw;
-      _e.set(0,q.yaw,0);_m.compose(_v.set(x,Hg(x,z),z),_q.setFromEuler(_e),_s.set(1.08,1.08,1.08));
-      if(pose){if(nb<SOLD){soldB.setMatrixAt(nb,_m);soldB.setColorAt(nb++,col);}}else if(na<SOLD){soldA.setMatrixAt(na,_m);soldA.setColorAt(na++,col);}
-      if(m.rpg&&nr<48){rpgM.setMatrixAt(nr,_m);rpgM.setColorAt(nr++,col);}}}
-  soldA.count=na;soldB.count=nb;rpgM.count=nr;for(const m of[soldA,soldB,rpgM]){m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;}}
+    const fast=fight||toBase,still=q.hold||(q.guard&&!fight&&Math.hypot(q.wx-q.x,q.wz-q.z)<6);
+    for(const m of q.men){if(!m.a||na>=SOLD)continue;if(m.yo===undefined){m.yo=gauss()*.12;m.kn=Math.random()<.5;}
+      if(!still)m.ph+=dt*(fast?9.5:5.2);const x=q.x+m.ox,z=q.z+m.oz,mode=still&&(m.kn||q.hold)?1:0,amp=still?0:fast?.55:.32;
+      drawMan(na++,x,z,q.yaw+m.yo,m.ph,mode,amp,m.rpg&&nr<48?nr++:-1,q.cmdo?_cc:_cw);}}
+  solB.count=na;solT.count=solS.count=solA.count=na*2;rpgM.count=nr;for(const m of SOLM){m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;}}
 
 /* ---------- tutorial ---------- */
 const TUT=TOUCH?[
@@ -1211,7 +1230,7 @@ function tick(dt){
       updateCam(dt);updateHud(dt);}}
   if(!noRender)render();}
 toMenu();requestAnimationFrame(frame);
-if(location.protocol==='file:')window.__g={get helis(){return helis;},get passZ(){return passZ;},get ramps(){return ramps;},get art(){return art;},heli(){spawnHeli();},kill(e){killEnemy(e,100);},losFrac(){let n=0,t=0;const y=P1.y+2.3;for(let tx=-1600;tx<=-300;tx+=100)for(let tz=-900;tz<=900;tz+=150){t++;if(los(P1.x,y,P1.z,tx,Hg(tx,tz)+1.8,tz))n++;}return n/t;},go(id){level=2;score=0;P1.hp=100;scId=id;briefing();},get forts(){return forts;},get routes(){return routes;},get samPos(){return samPos;},get blocks(){return blocks;},get jets(){return jets;},dmg(n){damagePlayer(n,P1.x+50,P1.z,'TEST');},gauss,get intel(){return intel;},get stats(){return stats;},Hg,passable,get start(){return startPos;},step(n){noRender=true;for(let i=0;i<n;i++)tick(.033);noRender=false;},get state(){return state;},get P(){return P1;},get enemies(){return enemies;},get squads(){return squads;},get bridges(){return bridges;},get M(){return M;},set camYaw(v){camYaw=v;},get camYaw(){return camYaw;},input,get score(){return score;},get tgt(){return tgt;},get base(){return baseHp;},skipTut(){store.set('lm_tut',true);},H,XD,
+if(location.protocol==='file:')window.__g={get helis(){return helis;},get passZ(){return passZ;},get ramps(){return ramps;},get art(){return art;},heli(){spawnHeli();},kill(e){killEnemy(e,100);},losFrac(){let n=0,t=0;const y=P1.y+2.3;for(let tx=-1600;tx<=-300;tx+=100)for(let tz=-900;tz<=900;tz+=150){t++;if(los(P1.x,y,P1.z,tx,Hg(tx,tz)+1.8,tz))n++;}return n/t;},go(id){level=2;score=0;P1.hp=100;scId=id;briefing();},get forts(){return forts;},get routes(){return routes;},get samPos(){return samPos;},get blocks(){return blocks;},get jets(){return jets;},sq(x,z,c){return makeSquad(x,z,c);},view(x,y,z,tx,ty,tz){cam.fov=30;cam.updateProjectionMatrix();cam.position.set(x,y,z);cam.lookAt(tx,ty,tz);cam.updateMatrixWorld();pipOn=false;renderer.render(scene,cam);noRender=true;},dmg(n){damagePlayer(n,P1.x+50,P1.z,'TEST');},gauss,get intel(){return intel;},get stats(){return stats;},Hg,passable,get start(){return startPos;},step(n){noRender=true;for(let i=0;i<n;i++)tick(.033);noRender=false;},get state(){return state;},get P(){return P1;},get enemies(){return enemies;},get squads(){return squads;},get bridges(){return bridges;},get M(){return M;},set camYaw(v){camYaw=v;},get camYaw(){return camYaw;},input,get score(){return score;},get tgt(){return tgt;},get base(){return baseHp;},skipTut(){store.set('lm_tut',true);},H,XD,
   shots(n,d){let h=0;const e=enemies.find(e=>e.alive);for(let i=0;i<n;i++){const s=d*SIGMA,x=gauss()*s,y=gauss()*s;if(Math.abs(x)<e.G.hw+.25&&y>-1.8&&y<e.G.hh+.25-1.4)h++;}return h/n;}};
 })();
 </script>
