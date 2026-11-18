@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Lone Merkava</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700&family=Saira+Stencil+One&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
   /* layout: full screen 3D battlefield, HUD pinned to the edges, gunner sight as an inset, menus as a left aligned field order sheet */
@@ -59,16 +59,21 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block}
 #dmg i{position:absolute;left:-46px;top:-34vmin;width:92px;height:14px;border-top:5px solid var(--signal);border-radius:50%/100% 100% 0 0}
 
 /* gunner sight inset */
-#pip{position:fixed;right:calc(10px + env(safe-area-inset-right));top:calc(88px + env(safe-area-inset-top));width:min(47vw,200px);aspect-ratio:1;border:2px solid var(--sand);outline:1px solid #000;pointer-events:auto;cursor:pointer;overflow:hidden;font:700 12px var(--body);letter-spacing:.08em;color:var(--paper);text-shadow:0 1px 2px #000}
+#pip{position:fixed;right:calc(10px + env(safe-area-inset-right));top:calc(88px + env(safe-area-inset-top));width:min(47vw,200px);aspect-ratio:1;border:7px solid #0b0c0a;border-radius:50%;box-shadow:0 0 0 2px #2a2b25,0 4px 14px rgba(0,0,0,.55);
+  pointer-events:auto;cursor:pointer;overflow:hidden;container-type:inline-size;font-family:"Share Tech Mono",ui-monospace,Menlo,Consolas,monospace;color:#f2f2ea;text-shadow:0 0 2px #000,0 1px 1px #000;letter-spacing:.04em}
 #pip.big{right:auto;left:50%;transform:translateX(-50%);top:calc(88px + env(safe-area-inset-top));width:min(92vw,56vh)}
 #hud.bigpip #radar,#hud.bigpip #marks,#hud.bigpip #gm{visibility:hidden}
-#pip i{position:absolute;background:rgba(236,230,207,.85)}
-#pip i.h{left:8%;right:8%;top:50%;height:1px;clip-path:polygon(0 0,44% 0,44% 100%,56% 100%,56% 0,100% 0,100% 100%,0 100%)}
-#pip i.v{top:8%;bottom:8%;left:50%;width:1px;clip-path:polygon(0 0,100% 0,100% 44%,0 44%,0 56%,100% 56%,100% 100%,0 100%)}
-#pip i.d{left:50%;top:50%;width:3px;height:3px;margin:-1px;background:var(--signal)}
-#pip span{position:absolute;left:6px;right:6px;display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
-#pipT{top:4px}#pipB{bottom:4px}
-#pipB b{color:var(--amber)}
+#pip:after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 58%,rgba(0,0,0,.28) 80%,rgba(0,0,0,.7) 100%);pointer-events:none}
+#pip svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#pip svg *{stroke:#f2f2ea;stroke-width:1.1;fill:none;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 1px #000)}
+#pip .tx{position:absolute;white-space:nowrap;font-size:max(9px,5.4cqw);line-height:1.15;z-index:1}
+#pipM{left:50%;top:14%;transform:translateX(-50%)}
+#pipN{left:50%;top:23%;transform:translateX(-50%);max-width:60%;overflow:hidden;text-overflow:ellipsis;font-size:max(9px,4.8cqw);padding:0 .5em;border:1px solid #f2f2ea;box-shadow:0 0 1px #000}
+#pipR{left:50%;top:75%;transform:translateX(-50%);font-size:max(14px,10cqw);letter-spacing:.06em}
+#pipL{left:15%;top:64%}
+#pipF{right:15%;top:64%;text-align:right}
+#pipM.ld{color:var(--amber)}
+#pipF br{display:none}
 
 .ctl{position:fixed;pointer-events:auto;touch-action:none}
 #stick{left:calc(26px + env(safe-area-inset-left));bottom:calc(30px + env(safe-area-inset-bottom));width:112px;height:112px;border-radius:50%;border:2px solid rgba(220,203,150,.55);background:rgba(18,19,14,.3);pointer-events:none}
@@ -112,8 +117,9 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
 #err{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:18px;background:var(--basalt)}
 @media (max-height:430px){ .sheet{gap:8px} h1{font-size:42px} h2{font-size:30px} p{font-size:16px} button.b{padding:8px 14px;min-height:42px} .btns{flex-direction:row;flex-wrap:wrap}
   #tut{bottom:auto;top:calc(58px + env(safe-area-inset-top));left:auto;right:calc(60px + env(safe-area-inset-right));transform:none;width:min(44vw,400px)}
-  #pip{right:auto;left:calc(144px + env(safe-area-inset-left));top:calc(58px + env(safe-area-inset-top));width:min(46vh,190px);font-size:11px}
-  #pip.big{left:50%;top:calc(52px + env(safe-area-inset-top));width:min(60vw,78vh)} }
+  #pip{right:auto;left:calc(144px + env(safe-area-inset-left));top:calc(58px + env(safe-area-inset-top));width:min(46vh,190px)}
+  #pip.big{left:50%;top:calc(52px + env(safe-area-inset-top));width:min(60vw,78vh)}
+  #toast{top:auto;bottom:calc(16px + env(safe-area-inset-bottom))} }
 @media (prefers-reduced-motion:reduce){ #toast{transition:none} }
 </style>
 </head>
@@ -142,7 +148,8 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
   <div id="dmg"><i></i></div>
   <div id="marks"></div>
   <div id="gm"></div>
-  <div id="pip" class="hide"><i class="h"></i><i class="v"></i><i class="d"></i><span id="pipT"><em id="pipN" style="font-style:normal"></em><em id="pipR" style="font-style:normal"></em></span><span id="pipB"><b id="pipM"></b><em id="pipF" style="font-style:normal"></em></span></div>
+  <div id="pip" class="hide"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="2.2"/><path d="M44 50H47.4M52.6 50H56M50 44V47.4M50 52.6V56M32 50H41M59 50H68M18 50H27M73 50H82M40 47.5V52.5M60 47.5V52.5M38 46H44M56 46H62M38 54H44M56 54H62"/></svg>
+    <span class="tx" id="pipM">SABOT</span><span class="tx" id="pipN">NO TARGET</span><span class="tx" id="pipR">1200</span><span class="tx" id="pipL">LASER</span><span class="tx" id="pipF">TGT</span></div>
   <div id="toast"></div>
   <div id="warn" class="hide">LEAVING THE SECTOR. TURN BACK.</div>
   <div id="tut" class="hide"><small id="tutN">TRAINING</small><span id="tutT"></span></div>
@@ -243,7 +250,7 @@ dl.keys dt i{display:inline-block;width:0;height:0;border-left:6px solid transpa
     <div class="eyebrow">CREW BRIEFING</div>
     <h2>HOW TO PLAY</h2>
     <dl class="keys" id="keys"></dl>
-    <p>You command and lay the gun roughly. When it points near a target the gunner sight opens. Centre the cross with fine aim and fire. Range and elevation are automatic. A hit that does not kill halts the target for a few seconds. Your armor repairs itself once you have gone 10 seconds without being hit and are not firing, so pull back out of sight when it runs low. Rounds scatter more with distance: a sure hit at 300 m, about one in two at 2000 m.</p>
+    <p>You command and lay the gun roughly. When it points near a target the gunner sight opens. Centre the cross with fine aim and fire. Range and elevation are automatic. A hit that does not kill halts the target for a few seconds. Your armor repairs itself once you have gone 10 seconds without being hit and are not firing, but only half of what the last hit left missing comes back. Pull back out of sight when it runs low. Rounds scatter more with distance: a sure hit at 300 m, about one in two at 2000 m. On the move the gun bounces off the target, worst when driving fast or turning with the turret to the side, so stop to shoot.</p>
     <p>The ditch can be crossed only on a laid bridge or at the two ground passes, shown green on the map. Kill bridge layers and the columns must detour to a pass. Units that reach the base damage it.</p>
     <p>Firing ramps (sand squares on the map) lift you above the ground for long shots, but you are exposed on top. Stay spotted in one place and artillery finds you, so shoot and move. Infantry and commandos carry RPGs but can only use them inside about 140 m. Flooring the engine makes smoke that reveals you.</p>
     <p>Attack missions: the SAM launchers can only be hit from close range. They sit inside a round fort you enter through the rear gate. Enemy units are marked only once you have seen them.</p>
@@ -601,7 +608,7 @@ function makeTank(type){const G=GEO[type],g=new T.Group(),hull=new T.Mesh(G.hull
 function seat(t,snap){t.y=H(t.x,t.z);const e=2.6;_v.set(H(t.x-e,t.z)-H(t.x+e,t.z),2*e,H(t.x,t.z-e)-H(t.x,t.z+e)).normalize();
   if(snap)t.n.copy(_v);else t.n.lerp(_v,.18).normalize();
   t.g.position.set(t.x,t.y,t.z);_q.setFromUnitVectors(UP,t.n);_q2.setFromAxisAngle(UP,t.yaw);t.g.quaternion.copy(_q).multiply(_q2);
-  if(t.alive){t.turret.rotation.y=t.tyaw-t.yaw;t.gun.rotation.x=-t.elev;t.gm.position.z=-t.recoil;}}
+  if(t.alive){t.turret.rotation.y=t.tyaw-t.yaw+(t.jy||0);t.gun.rotation.x=-t.elev-(t.je||0);t.gm.position.z=-t.recoil;}}
 function roll(t,dt){t.roll+=t.speed*dt;t.wmat.map.rotation=-t.roll/t.G.wr;t.tmat.map.offset.y=t.roll/.22;}
 function l2w(t,l,o){const c=Math.cos(t.yaw),s=Math.sin(t.yaw);o.x=t.x+l[0]*c+l[2]*s;o.y=t.y+l[1];o.z=t.z-l[0]*s+l[2]*c;return o;}
 function wreck(t){t.alive=false;if(t.cmd)t.cmd.visible=false;t.hull.material=t.tm.material=t.gm.material=t.wm.material=t.tk.material=matWreck;if(t.type!=='BL'){t.turret.rotation.z=rnd(-.2,.2);t.turret.rotation.y+=rnd(-.7,.7);t.turret.position.y+=.15;t.gun.rotation.x=.12;}t.burn=14;t.smoke=60;t.speed=0;}
@@ -754,7 +761,7 @@ function setupMission(id,asMenu){
   buildWorld(asMenu?3:(Math.random()*1e6|0)+7,sc);M=missionDef(sc,tutorial);M.t=0;M.pending=asMenu?[]:M.axes.slice();
   M.passAx=passZ.map(z=>({z,name:'PASS',pass:true,busy:null,bls:[],bridge:{ready:true,alive:true,z,pass:true}}));M.live=asMenu?[]:M.passAx.slice();M.started=false;art.t=0;art.on=false;art.x=1e9;paintSky(asMenu?PALS[1]:M.pal);
   if(!P1)P1=makeTank('MERK');
-  P1.x=startPos.x;P1.z=startPos.z;P1.yaw=P1.tyaw=camYaw=-Math.PI/2;P1.speed=0;P1.elev=0;P1.reload=0;P1.ammo=50;P1.alive=true;P1.recoil=0;P1.reveal=0;P1.in=null;P1.onRamp=false;P1.hitT=99;P1.fireT=99;P1.rep=false;
+  P1.x=startPos.x;P1.z=startPos.z;P1.yaw=P1.tyaw=camYaw=-Math.PI/2;P1.speed=0;P1.elev=0;P1.reload=0;P1.ammo=50;P1.alive=true;P1.recoil=0;P1.reveal=0;P1.in=null;P1.onRamp=false;P1.hitT=99;P1.fireT=99;P1.rep=false;P1.repCap=100;P1.jy=0;P1.je=0;P1.yr=0;
   P1.hull.material=P1.tm.material=P1.gm.material=matTank;P1.wm.material=P1.wmat;P1.tk.material=P1.tmat;P1.turret.position.fromArray(P1.G.tp);P1.turret.rotation.set(0,0,0);P1.burn=P1.smoke=0;seat(P1,true);
   stats={shots:0,hits:0,kills:0,time:0,breach:0,jets:0};intel=[];M.samN=0;M.guess=samPos?{x:samPos.x+rnd(-140,140),z:samPos.z+rnd(-140,140),ph:rnd(6)}:null;P1.cmd.visible=true;tgt=null;pipOn=false;$('pip').classList.add('hide');$('fine').classList.add('hide');pipHold=0;resup=0;baseHp=100;tut=null;jetT=6;samT=16;
   $('baseRow').classList.toggle('hide',!baseOn);
@@ -845,7 +852,7 @@ function playerFire(){const p=P1;if(!p.alive)return;const ox=p.x,oy=p.y+2.3,oz=p
   if(p.reload>0||p.ammo<=0)return;let yaw=p.tyaw,el=p.elev,tof=0;
   if(tgt){tgtPos(tgt,_tp);const tf=tgt.d/VP,vx=tgt.speed?Math.sin(tgt.yaw)*tgt.speed:0,vz=tgt.speed?Math.cos(tgt.yaw)*tgt.speed:0,tx=_tp.x+vx*tf,tz=_tp.z+vz*tf,dx=tx-ox,dz=tz-oz,d=Math.hypot(dx,dz);
     yaw+=angDiff(Math.atan2(dx,dz),Math.atan2(_tp.x-ox,_tp.z-oz));const s=solveElev(d,_tp.y-oy,VP);if(s!==null)el=s;tof=d/VP;}
-  yaw+=gauss()*SIGMA;el+=gauss()*SIGMA;
+  yaw+=gauss()*SIGMA+p.jy;el+=gauss()*SIGMA+p.je;
   spawnShell(ox,oy,oz,yaw,el,VP,p,6);p.reload=RELOAD;p.fireT=0;p.ammo--;p.recoil=.7;shake=Math.max(shake,.5);stats.shots++;p.reveal=Math.max(p.reveal,14);pipHold=Math.max(pipHold,tof+1.6);Snd.boom(.9,.7,1800,true);if(p.ammo===0)resup=10;}
 function hitTank(t,px,py,pz,m){const dx=px-t.x,dz=pz-t.z,c=Math.cos(t.yaw),sn=Math.sin(t.yaw),lx=dx*c-dz*sn,lz=dx*sn+dz*c,ly=py-t.y;return Math.abs(lx)<t.G.hw+m&&Math.abs(lz)<t.G.hl+m&&ly>-.4&&ly<t.G.hh+m;}
 function splash(x,z,r){for(const q of squads){if(!q.alive)continue;for(const m of q.men)if(m.a&&Math.hypot(q.x+m.ox-x,q.z+m.oz-z)<r){m.a=false;score+=15;}}}
@@ -865,8 +872,8 @@ function updateShells(dt){let ti=0;for(let i=shells.length-1;i>=0;i--){const s=s
 function killEnemy(e,dist){wreck(e);explosion(e.x,e.y+1.6,e.z,1.7);Snd.boom(clamp(300/Math.max(dist,1),.25,1),1.3,1400,true);colliders.push({x:e.x,z:e.z,r:3.2});
   const pts=e.dummy?50:e.def.score+Math.round(dist*.25);score+=pts;if(!e.dummy){stats.kills++;totalKills++;}toast(e.name+' DESTROYED  +'+pts);
   if(e.axis){if(e.axis.busy===e)e.axis.busy=null;if(e.role==='bl'){for(const b of bridges)if(b.bl===e&&!b.ready&&b.alive){b.alive=false;scene.remove(b.mesh);if(e.axis.bridge===b)e.axis.bridge=null;}if(!(e.axis.bridge&&e.axis.bridge.ready)&&!e.axis.bls.some(b=>b.alive&&b.st!=='park'))axisLost(e.axis);}}}
-function damagePlayer(dmg,sx,sz,msg){const p=P1;if(!p.alive)return;p.hp-=dmg;p.hitT=0;shake=1;Snd.tone(180,.25,.25,'square');$('flash').style.opacity=1;flashT=.5;
-  const dx=sx-p.x,dz=sz-p.z,fw=dx*Math.sin(camYaw)+dz*Math.cos(camYaw),rt=-dx*Math.cos(camYaw)+dz*Math.sin(camYaw);dmgA=Math.atan2(rt,fw);dmgT=1.6;toast(msg);if(p.hp>0&&p.hp<60&&M.t-(M.hintT||-99)>25){M.hintT=M.t;setTimeout(()=>{if(state==='play')toast('PULL BACK. ARMOR REPAIRS WHEN NOT HIT');},2000);}
+function damagePlayer(dmg,sx,sz,msg){const p=P1;if(!p.alive)return;p.hp-=dmg;p.hitT=0;p.repCap=Math.min(100,Math.max(0,p.hp)+(100-Math.max(0,p.hp))*.5);shake=1;Snd.tone(180,.25,.25,'square');$('flash').style.opacity=1;flashT=.5;
+  const dx=sx-p.x,dz=sz-p.z,fw=dx*Math.sin(camYaw)+dz*Math.cos(camYaw),rt=-dx*Math.cos(camYaw)+dz*Math.sin(camYaw);dmgA=Math.atan2(rt,fw);dmgT=1.6;toast(msg);if(p.hp>0&&p.hp<60&&M.t-(M.hintT||-99)>25){M.hintT=M.t;setTimeout(()=>{if(state==='play')toast('PULL BACK. HALF THE LOST ARMOR REPAIRS WHEN NOT HIT');},2000);}
   if(p.hp<=0){p.hp=0;wreck(p);explosion(p.x,p.y+1.6,p.z,2);Snd.boom(1,1.6,1200,true);state='dying';overWhy='tank';timer=2.6;Snd.engine(0,false);}}
 function hurtPlayer(s,x,y,z,sp){const p=P1,f=-(s.vx*Math.sin(p.yaw)+s.vz*Math.cos(p.yaw))/sp,k=f>.55?.6:f<-.4?1.4:1;explosion(x,y,z,.7);dustCloud(p.x,p.y,p.z,30,34);Snd.boom(1,.6,3000,true);
   damagePlayer(s.owner.def.dmg*k,s.owner.x,s.owner.z,(s.rpg?'RPG ':'')+(k<1?'HIT ON FRONT ARMOR':k>1?'REAR HIT':'SIDE HIT'));}
@@ -897,6 +904,10 @@ function updatePlayer(dt){const p=P1,k=input.keys;
   for(const e of enemies){const dx=p.x-e.x,dz=p.z-e.z,d=Math.hypot(dx,dz);if(d<7.5&&d>.01){p.x=e.x+dx/d*7.5;p.z=e.z+dz/d*7.5;p.speed*=.9;}}
   if(tut)tut.moved+=Math.hypot(p.x-ox,p.z-oz);
   p.tyaw+=clamp(angDiff(camYaw,p.tyaw),-.95*dt,.95*dt);
+  {const sp=Math.min(1,Math.abs(p.speed)/13),yr=dt>0?angDiff(p.yaw,p.lyaw===undefined?p.yaw:p.lyaw)/dt:0;p.lyaw=p.yaw;p.yr+=(Math.abs(yr)-p.yr)*Math.min(1,dt*4);
+    const side=Math.abs(Math.sin(p.tyaw-p.yaw)),sE=.003*sp*(1+1.1*side),sY=.002*sp*(1+2.2*side)+.006*Math.min(1,p.yr),tau=.3,k=Math.sqrt(2*dt/tau);
+    p.je+=-p.je/tau*dt+sE*k*gauss();p.jy+=-p.jy/tau*dt+sY*k*gauss();
+    if(sp>.15&&Math.random()<dt*sp*.9){p.je+=gauss()*.006*sp;p.jy+=gauss()*.004*sp*(1+side);}}
   // gunner: pick the target nearest the gun line, range it, set elevation
   const oy=p.y+2.3;let best=null,bd=1e9;
   const consider=t=>{tgtPos(t,_tp);const dx=_tp.x-p.x,dz=_tp.z-p.z,d=Math.hypot(dx,dz);if(d>2700||d<8||(t.type==='SAM'&&d>170)||(t.role==='fort'&&t.st==='down'&&p.in!==t.f))return;const df=Math.abs(angDiff(Math.atan2(dx,dz),p.tyaw));
@@ -911,7 +922,7 @@ function updatePlayer(dt){const p=P1,k=input.keys;
   mgT-=dt;if((input.fire||k.Space)&&(!tut||tut.step>=2))playerFire();
   p.recoil=Math.max(0,p.recoil-dt*2.2);
   if(p.reveal>0)p.reveal-=dt;
-  p.hitT+=dt;p.fireT+=dt;p.rep=p.hitT>10&&p.fireT>4&&p.hp<100;if(p.rep)p.hp=Math.min(100,p.hp+4*dt);
+  p.hitT+=dt;p.fireT+=dt;p.rep=p.hitT>10&&p.fireT>4&&p.hp<p.repCap-.05;if(p.rep)p.hp=Math.min(p.repCap,p.hp+4*dt);
   if(Math.abs(p.speed)>3){p.dust-=dt;if(p.dust<=0){p.dust=.09;dust(p,1);}}
   crewAnim(p,dt);roll(p,dt);seat(p);Snd.engine(Math.abs(p.speed)/13,true);
   pipHold-=dt;const want=!!tgt||pipHold>0;if(want!==pipOn){pipOn=want;$('pip').classList.toggle('hide',!want);$('fine').classList.toggle('hide',!want||!TOUCH);}$('hud').classList.toggle('bigpip',pipOn&&pipBig);}
@@ -1074,8 +1085,8 @@ function updateHud(dt){const p=P1;
   for(const h of helis)if(h.alive&&front(h.x,h.z))mark(h.x,h.y+7,h.z,'',tgt===h);
   for(const q of ramps){const d=Math.hypot(q.x+6-p.x,q.z-p.z);if(d>30&&d<900)mark(q.x+6,Hg(q.x+6,q.z)+2.5,q.z,' rmp',false);}
   for(;mi<marks.length;mi++)marks[mi].className='mk hide';
-  if(pipOn){setT('pipN',tgt?tgt.name:'NO TARGET');setT('pipR',Math.round(pipD)+' M');const coax=tgt&&tgt.kind==='INF'&&tgt.d<1300;setT('pipM',coax?'COAX MG':p.reload>0?'LOADING':'SABOT');
-    let fl='';for(const s of shells)if(s.owner===p&&!s.tr){fl='ON THE WAY';break;}setT('pipF',fl||('FLIGHT '+(pipD/VP).toFixed(1)+' S'));}
+  if(pipOn){setT('pipN',tgt?tgt.name:'NO TARGET');setT('pipR',String(Math.round(pipD)).padStart(4,'0'));const coax=tgt&&tgt.kind==='INF'&&tgt.d<1300;setT('pipM',coax?'COAX MG':p.reload>0?'LOADING':'SABOT');$('pipM').classList.toggle('ld',p.reload>0&&!coax);
+    let fl='';for(const s of shells)if(s.owner===p&&!s.tr){fl='ON THE WAY';break;}setT('pipF',fl||((tgt?'TGT':'NO TGT')+' '+(pipD/VP).toFixed(1)+' S'));}
   if(tgt&&!hudC.wasT)Snd.tone(990,.06,.07);hudC.wasT=!!tgt;
   if(toastT>0){toastT-=dt;if(toastT<=0)$('toast').classList.remove('on');}
   if(flashT>0){flashT-=dt;$('flash').style.opacity=Math.max(0,flashT*2);}
@@ -1091,14 +1102,16 @@ function updateCam(dt,snap){const p=P1;cam.fov=baseFov;cam.updateProjectionMatri
   cam.lookAt(p.x+fx*45,p.y+3,p.z+fz*45);cam.updateMatrixWorld();sky.position.copy(cam.position);
   // gunner sight
   const wf=clamp(2*Math.atan(16/pipD)*180/Math.PI,1.2,9);pipFov+=(wf-pipFov)*Math.min(1,dt*4);pipCam.fov=pipFov;pipCam.updateProjectionMatrix();
-  const gx=Math.sin(p.tyaw),gz=Math.cos(p.tyaw);pipCam.position.set(p.x+gx*1.5,p.y+3.1,p.z+gz*1.5);pipCam.lookAt(p.x+gx*pipD,pipY,p.z+gz*pipD);if(shake>0)pipCam.rotateZ(gauss()*shake*.004);pipCam.updateMatrixWorld();}
+  const gx=Math.sin(p.tyaw),gz=Math.cos(p.tyaw);pipCam.position.set(p.x+gx*1.5,p.y+3.1,p.z+gz*1.5);{const a=p.tyaw+p.jy,el=Math.atan2(pipY-(p.y+3.1),pipD)+p.je;pipCam.lookAt(p.x+gx*1.5+Math.sin(a)*pipD,p.y+3.1+Math.tan(el)*pipD,p.z+gz*1.5+Math.cos(a)*pipD);}if(shake>0)pipCam.rotateZ(gauss()*shake*.004);pipCam.updateMatrixWorld();}
 let pipR=null;
+const maskScene=new T.Scene(),maskCam=new T.OrthographicCamera(-1,1,1,-1,.1,10);{const sh=new T.Shape();sh.moveTo(-1.1,-1.1);sh.lineTo(1.1,-1.1);sh.lineTo(1.1,1.1);sh.lineTo(-1.1,1.1);sh.lineTo(-1.1,-1.1);
+  const h=new T.Path();h.absarc(0,0,1,0,TAU,true);sh.holes.push(h);const m=new T.Mesh(new T.ShapeGeometry(sh,48),new T.MeshBasicMaterial({colorWrite:false}));m.position.z=-.2;maskScene.add(m);}
 function render(){sun.position.set(P1.x+sunDir.x*70,P1.y+sunDir.y*70,P1.z+sunDir.z*70);sun.target.position.set(P1.x,P1.y,P1.z);sun.target.updateMatrixWorld();renderer.shadowMap.needsUpdate=true;
   const us=renderer.domElement.height/(2*Math.tan(cam.fov*Math.PI/360));smoke.mat.uniforms.uScale.value=fire.mat.uniforms.uScale.value=trMat.uniforms.uScale.value=us;trMat.uniforms.uMin.value=3*PR;
   renderer.setScissorTest(false);renderer.setViewport(0,0,W,HH);renderer.render(scene,cam);
-  if(pipOn&&(state==='play'||state==='winning')){const r=pipR=$('pip').getBoundingClientRect();if(r.width>4){const x=r.left+2,y=HH-r.bottom+2,w=r.width-4,h=r.height-4;
+  if(pipOn&&(state==='play'||state==='winning')){const el=$('pip'),r=pipR=el.getBoundingClientRect(),bw=el.clientLeft||0;if(r.width>4){const x=r.left+bw,y=HH-r.bottom+bw,w=r.width-2*bw,h=r.height-2*bw;
       const u2=h*PR/(2*Math.tan(pipCam.fov*Math.PI/360));smoke.mat.uniforms.uScale.value=fire.mat.uniforms.uScale.value=trMat.uniforms.uScale.value=u2;trMat.uniforms.uMin.value=2.5*PR;
-      renderer.setViewport(x,y,w,h);renderer.setScissor(x,y,w,h);renderer.setScissorTest(true);P1.g.visible=false;renderer.render(scene,pipCam);P1.g.visible=true;renderer.setScissorTest(false);}}}
+      renderer.setViewport(x,y,w,h);renderer.setScissor(x,y,w,h);renderer.setScissorTest(true);renderer.autoClear=false;renderer.clearDepth();renderer.render(maskScene,maskCam);P1.g.visible=false;renderer.render(scene,pipCam);P1.g.visible=true;renderer.autoClear=true;renderer.setScissorTest(false);}}}
 
 /* ---------- flow ---------- */
 const screens=['menu','brief','pause','clear','over','board','help','pick'];
@@ -1198,7 +1211,7 @@ function tick(dt){
       updateCam(dt);updateHud(dt);}}
   if(!noRender)render();}
 toMenu();requestAnimationFrame(frame);
-if(location.protocol==='file:')window.__g={get helis(){return helis;},get passZ(){return passZ;},get ramps(){return ramps;},get art(){return art;},heli(){spawnHeli();},kill(e){killEnemy(e,100);},losFrac(){let n=0,t=0;const y=P1.y+2.3;for(let tx=-1600;tx<=-300;tx+=100)for(let tz=-900;tz<=900;tz+=150){t++;if(los(P1.x,y,P1.z,tx,Hg(tx,tz)+1.8,tz))n++;}return n/t;},go(id){level=2;score=0;P1.hp=100;scId=id;briefing();},get forts(){return forts;},get routes(){return routes;},get samPos(){return samPos;},get blocks(){return blocks;},get jets(){return jets;},get intel(){return intel;},get stats(){return stats;},Hg,passable,get start(){return startPos;},step(n){noRender=true;for(let i=0;i<n;i++)tick(.033);noRender=false;},get state(){return state;},get P(){return P1;},get enemies(){return enemies;},get squads(){return squads;},get bridges(){return bridges;},get M(){return M;},set camYaw(v){camYaw=v;},get camYaw(){return camYaw;},input,get score(){return score;},get tgt(){return tgt;},get base(){return baseHp;},skipTut(){store.set('lm_tut',true);},H,XD,
+if(location.protocol==='file:')window.__g={get helis(){return helis;},get passZ(){return passZ;},get ramps(){return ramps;},get art(){return art;},heli(){spawnHeli();},kill(e){killEnemy(e,100);},losFrac(){let n=0,t=0;const y=P1.y+2.3;for(let tx=-1600;tx<=-300;tx+=100)for(let tz=-900;tz<=900;tz+=150){t++;if(los(P1.x,y,P1.z,tx,Hg(tx,tz)+1.8,tz))n++;}return n/t;},go(id){level=2;score=0;P1.hp=100;scId=id;briefing();},get forts(){return forts;},get routes(){return routes;},get samPos(){return samPos;},get blocks(){return blocks;},get jets(){return jets;},dmg(n){damagePlayer(n,P1.x+50,P1.z,'TEST');},gauss,get intel(){return intel;},get stats(){return stats;},Hg,passable,get start(){return startPos;},step(n){noRender=true;for(let i=0;i<n;i++)tick(.033);noRender=false;},get state(){return state;},get P(){return P1;},get enemies(){return enemies;},get squads(){return squads;},get bridges(){return bridges;},get M(){return M;},set camYaw(v){camYaw=v;},get camYaw(){return camYaw;},input,get score(){return score;},get tgt(){return tgt;},get base(){return baseHp;},skipTut(){store.set('lm_tut',true);},H,XD,
   shots(n,d){let h=0;const e=enemies.find(e=>e.alive);for(let i=0;i<n;i++){const s=d*SIGMA,x=gauss()*s,y=gauss()*s;if(Math.abs(x)<e.G.hw+.25&&y>-1.8&&y<e.G.hh+.25-1.4)h++;}return h/n;}};
 })();
 </script>
